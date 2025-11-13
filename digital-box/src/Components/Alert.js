@@ -38,7 +38,7 @@ const AlertUI = (props) => {
       setUiMessage(props.propMessage);
     } else if (
       props.propMessage ===
-      "Some of your orders have already been shipped or cancelled."
+      "Some of your orders have already been shipped or cancelled. Please re-sync the database."
     ) {
       setSeverityState("warning");
       setOpen(true);

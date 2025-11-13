@@ -162,7 +162,7 @@ export default function ButtonContainer(props) {
         onClick={handleRefreshOrders}
       >
         <RefreshIcon sx={{ paddingRight: ".5vh" }} />
-        Refresh Labels
+        Sync Database
       </Fab>
     </Box>
   );
