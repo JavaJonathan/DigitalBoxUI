@@ -3,6 +3,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const NavBar = (props) => {
   const handleOrderHistoryClick = () => {
@@ -17,6 +18,22 @@ const NavBar = (props) => {
     props.setPdfItems([]);
     props.setOrderHistory(false);
     props.setSortedByTitle(false);
+  };
+
+  const handleReportUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== "text/csv" && !file.name.toLowerCase().endsWith(".csv")) {
+      alert("Only CSV files are allowed");
+      event.target.value = "";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    props.handleGenerateReport(formData);
   };
 
   return (
@@ -64,6 +81,26 @@ const NavBar = (props) => {
               Order History
             </Button>
           )}
+          <Button
+            component="label"
+            variant="contained"
+            size="small"
+            sx={{
+              position: "absolute",
+              fontWeight: "bold",
+              right: "2vw",
+              bgcolor: "#4188f2",
+            }}
+          >
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              style={{ display: "none" }}
+              onChange={handleReportUpload}
+            ></input>
+            Shippable Items
+            <UploadFileIcon sx={{ ml: 0.5 }} fontSize="small" />
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

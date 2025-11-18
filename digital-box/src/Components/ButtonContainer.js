@@ -6,6 +6,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CancelScheduleSendIcon from "@mui/icons-material/CancelScheduleSend";
 import * as HttpHelper from "./HttpHelper";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function ButtonContainer(props) {
   const handleCancelClick = async () => {
@@ -104,66 +105,66 @@ export default function ButtonContainer(props) {
       alignItems="center"
       justifyContent="center"
     >
-      <Fab
-        variant="extended"
-        sx={{
-          bgcolor: "black",
-          fontWeight: "bold",
-          color: "white",
-          "&:hover": {
-            bgcolor: "blue",
-          },
-        }}
-        onClick={handleSelectAll}
-      >
-        <CheckBoxIcon sx={{ mr: 1 }} />
-        Select All
-      </Fab>
-      <Fab
-        variant="extended"
-        sx={{
-          bgcolor: "green",
-          fontWeight: "bold",
-          color: "white",
-          "&:hover": {
-            bgcolor: "blue",
-          },
-        }}
-        onClick={handleShipClick}
-      >
-        <LocalShippingIcon sx={{ mr: 1 }} />
-        Ship
-      </Fab>
-      <Fab
-        variant="extended"
-        sx={{
-          bgcolor: "red",
-          fontWeight: "bold",
-          color: "white",
-          "&:hover": {
-            bgcolor: "blue",
-          },
-        }}
-        onClick={handleCancelClick}
-      >
-        <CancelScheduleSendIcon sx={{ mr: 1 }} />
-        Cancel
-      </Fab>
-      <Fab
-        variant="extended"
-        sx={{
-          bgcolor: "black",
-          fontWeight: "bold",
-          color: "white",
-          "&:hover": {
-            bgcolor: "blue",
-          },
-        }}
-        onClick={handleRefreshOrders}
-      >
-        <RefreshIcon sx={{ paddingRight: ".5vh" }} />
-        Sync Database
-      </Fab>
+      <Tooltip title="Select All" placement="top">
+        <Fab
+          sx={{
+            bgcolor: "black",
+            fontWeight: "bold",
+            color: "white",
+            "&:hover": {
+              bgcolor: "#4188f2",
+            },
+          }}
+          onClick={handleSelectAll}
+        >
+          <CheckBoxIcon />
+        </Fab>
+      </Tooltip>
+      <Tooltip title="Ship" placement="top">
+        <Fab
+          sx={{
+            bgcolor: "green",
+            fontWeight: "bold",
+            color: "white",
+            "&:hover": {
+              bgcolor: "black",
+            },
+          }}
+          onClick={handleShipClick}
+        >
+          <LocalShippingIcon />
+        </Fab>
+      </Tooltip>
+      <Tooltip title="Cancel" placement="top">
+        <Fab
+          sx={{
+            bgcolor: "red",
+            fontWeight: "bold",
+            color: "white",
+            "&:hover": {
+              bgcolor: "black",
+            },
+          }}
+          onClick={handleCancelClick}
+        >
+          <CancelScheduleSendIcon />
+        </Fab>
+      </Tooltip>
+      <Tooltip title="Sync Database" placement="top">
+        <Fab
+          sx={{
+            bgcolor: "black",
+            fontWeight: "bold",
+            color: "white",
+            "&:hover": {
+              bgcolor: "#4188f2",
+            },
+          }}
+          onClick={handleRefreshOrders}
+        >
+          <RefreshIcon />
+        </Fab>
+      </Tooltip>
     </Box>
   );
 }

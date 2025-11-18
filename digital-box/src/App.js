@@ -3,7 +3,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import * as HttpHelper from "./Components/HttpHelper";
 import NavBar from "./Components/NavBar";
 import AlertUI from "./Components/Alert";
-import ContentTable from "./Components/ContentTable";
 import GoogleIcon from "@mui/icons-material/Google";
 import Button from "@mui/material/Button";
 import Search from "./Components/Search";
@@ -12,6 +11,7 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import OrderHistory from "./Components/OrderHistory";
 import { useGoogleLogin } from "@react-oauth/google";
 import ButtonContainer from "./Components/ButtonContainer";
+import OrderTable from "./Components/OrderTable";
 
 function App() {
   //state defined in App.js is gloabl and passed via props, we could use this opportunity to implement the Redux pattern
@@ -45,11 +45,36 @@ function App() {
     },
   });
 
-  const handleSearch = (searchValue) => {
+  const handleAddNote = (fileId, note) => {
+    setIsLoading(true);
+    HttpHelper.addNoteToOrder(
+      setPdfItems,
+      setMessage,
+      fileId,
+      note,
+      setIsLoading,
+      setAuthToken
+    );
+  };
+
+  const handleTogglePriority = (fileId, priority) => {
+    setIsLoading(true);
+    HttpHelper.togglePriority(
+      setPdfItems,
+      setMessage,
+      fileId,
+      priority,
+      setIsLoading,
+      setAuthToken
+    );
+  };
+
+  const handleSearch = (searchValue, filters) => {
     HttpHelper.searchOrders(
       setPdfItems,
       setMessage,
       searchValue,
+      filters,
       setIsLoading,
       setAuthToken
     );
@@ -88,6 +113,16 @@ function App() {
     );
   };
 
+  const handleGenerateReport = (formData) => {
+    HttpHelper.generateReport(
+      setPdfItems,
+      setMessage,
+      setIsLoading,
+      setAuthToken,
+      formData
+    );
+  };
+
   const handleSortClick = (tabValue) => {
     let localPdfItems = pdfItems.map((item) => {
       return { ...item, Checked: false };
@@ -106,18 +141,19 @@ function App() {
       setPdfItems(localPdfItems);
       setSortedByTitle(false);
     } else if (sortedByTitle && tabValue === undefined) {
-      localPdfItems.sort(
-        (a, b) => {
-          
+      localPdfItems.sort((a, b) => {
         if (a.FileContents[0].ShipDate === "") {
-          return Date.parse(a.FileContents[1].ShipDate) -
-          Date.parse(b.FileContents[0].ShipDate)
+          return (
+            Date.parse(a.FileContents[1].ShipDate) -
+            Date.parse(b.FileContents[0].ShipDate)
+          );
         }
-        
-          return Date.parse(a.FileContents[0].ShipDate) -
+
+        return (
+          Date.parse(a.FileContents[0].ShipDate) -
           Date.parse(b.FileContents[0].ShipDate)
-        }
-      );
+        );
+      });
       setPdfItems(localPdfItems);
       setSortedByTitle(false);
     } else {
@@ -146,7 +182,7 @@ function App() {
       <GlobalStyles
         styles={{
           body: {
-            "font-family": "Alfa Slab One"
+            "font-family": "Alfa Slab One",
           },
         }}
       />
@@ -158,6 +194,7 @@ function App() {
             orderHistory={orderHistory}
             setPdfItems={setPdfItems}
             setSortedByTitle={setSortedByTitle}
+            handleGenerateReport={handleGenerateReport}
           />
           {orderHistory ? (
             <Fragment>
@@ -176,7 +213,6 @@ function App() {
                 handleSortClick={handleSortClick}
                 setIsLoading={setIsLoading}
                 isLoading={isLoading}
-                handleSearch={handleSearch}
                 handleCanceledSearch={handleCanceledSearch}
                 handleShippedSearch={handleShippedSearch}
                 sortedByTitle={sortedByTitle}
@@ -207,7 +243,7 @@ function App() {
                 setPdfItems={setPdfItems}
                 handleRefreshOrders={handleRefreshOrders}
               />
-              <ContentTable
+              <OrderTable
                 pdfItems={pdfItems}
                 setPdfItems={setPdfItems}
                 page={page}
@@ -215,6 +251,9 @@ function App() {
                 handleSortClick={handleSortClick}
                 renderSwitch={true}
                 sortedByTitle={sortedByTitle}
+                handleTogglePriority={handleTogglePriority}
+                isLoading={isLoading}
+                handleAddNote={handleAddNote}
               />
             </Fragment>
           )}

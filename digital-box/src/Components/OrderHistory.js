@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Divider from "@mui/material/Divider";
-import ContentTable from "./ContentTable";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Search from "./Search";
 import { green } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import OrderHistoryTable from "./OrderHistoryTable";
 
 const OrderHistory = ({
   pdfItems,
@@ -56,7 +56,7 @@ const OrderHistory = ({
         <Divider orientation="vertical" flexItem></Divider>
         <Tab label="Canceled" sx={{ fontWeight: "bold", color: "red" }} />
       </Tabs>
-      <ContentTable
+      <OrderHistoryTable
         pdfItems={pdfItems}
         setPdfItems={setPdfItems}
         page={page}

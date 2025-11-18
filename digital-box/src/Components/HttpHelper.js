@@ -59,10 +59,13 @@ export async function searchOrders(
   setPdfItems,
   setMessage,
   searchValue,
+  filters,
   setIsLoading,
   setAuthToken
 ) {
   let responseBody = "";
+
+  console.log(filters)
 
   await fetch("http://localhost:2020/search", {
     method: "POST",
@@ -73,7 +76,8 @@ export async function searchOrders(
       token: {
         access_token: localStorage.getItem("DigitalBoxToken"),
       },
-      Filter: searchValue,
+      searchValue: searchValue,
+      filters: filters
     }),
   })
     .then((response) => response.json().then((r) => (responseBody = r)))
@@ -164,6 +168,99 @@ export async function refreshOrders(
         access_token: localStorage.getItem("DigitalBoxToken"),
       },
       Filter: searchValue,
+    }),
+  })
+    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(() => {
+      setMessage(responseBody.Message);
+      setPdfItems(responseBody.Orders);
+      setIsLoading(false);
+      setAuthToken(responseBody.Token.token);
+    });
+}
+
+export async function togglePriority(
+  setPdfItems,
+  setMessage,
+  fileId,
+  priority,
+  setIsLoading,
+  setAuthToken
+) {
+  let responseBody = "";
+
+  await fetch("http://localhost:2020/priority", {
+    method: "POST",
+    headers: {
+      "content-type": "text/plain",
+    },
+    body: JSON.stringify({
+      token: {
+        access_token: localStorage.getItem("DigitalBoxToken"),
+      },
+      priority: priority,
+      FileId: fileId,
+    }),
+  })
+    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(() => {
+      setMessage(responseBody.Message);
+      setPdfItems(responseBody.Orders);
+      setIsLoading(false);
+      setAuthToken(responseBody.Token.token);
+    });
+}
+
+export async function generateReport(
+  setPdfItems,
+  setMessage,
+  setIsLoading,
+  setAuthToken,
+  formData
+) {
+  let responseBody = "";
+
+  formData.append(
+    "token",
+    JSON.stringify({
+      access_token: localStorage.getItem("DigitalBoxToken"),
+    })
+  );
+
+  await fetch("http://localhost:2020/generateReport", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(() => {
+      setMessage(responseBody.Message);
+      setPdfItems(responseBody.Orders);
+      setIsLoading(false);
+      setAuthToken(responseBody.Token.token);
+    });
+}
+
+export async function addNoteToOrder(
+  setPdfItems,
+  setMessage,
+  fileId,
+  note,
+  setIsLoading,
+  setAuthToken
+) {
+  let responseBody = "";
+
+  await fetch("http://localhost:2020/addNote", {
+    method: "POST",
+    headers: {
+      "content-type": "text/plain",
+    },
+    body: JSON.stringify({
+      token: {
+        access_token: localStorage.getItem("DigitalBoxToken"),
+      },
+      note: note,
+      FileId: fileId,
     }),
   })
     .then((response) => response.json().then((r) => (responseBody = r)))

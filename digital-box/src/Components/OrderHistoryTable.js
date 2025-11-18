@@ -16,7 +16,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyBoardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Box } from "@mui/material";
 
-const ContentTable = (props) => {
+const OrderHistoryTable = (props) => {
   const theme = createTheme({
     palette: {
       primary: grey,
@@ -237,4 +237,4 @@ const ContentTable = (props) => {
   );
 };
 
-export default ContentTable;
+export default OrderHistoryTable;

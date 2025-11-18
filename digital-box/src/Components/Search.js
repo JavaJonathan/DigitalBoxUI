@@ -5,8 +5,11 @@ import { Fragment, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import SendIcon from "@mui/icons-material/Send";
-import { Box } from "@mui/material";
+import { Badge, Box, IconButton, Tooltip } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
+import CircularProgress from "@mui/material/CircularProgress";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterModal from "./FilterModal";
 
 const Search = ({
   setIsLoading,
@@ -17,17 +20,37 @@ const Search = ({
   tabValue,
 }) => {
   const [searchText, setSearchText] = useState("");
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [textSearchTypeFilter, setTextSearchTypeFilter] = useState('orders');
+  const [marketplaceFilter, setMarketplaceFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState(false);
 
   useEffect(() => {
     setSearchText("");
-    handleSearch(searchText);
+    handleSearch(searchText, {
+      textSearchTypeFilter: textSearchTypeFilter,
+      marketplaceFilter: marketplaceFilter,
+      priorityFilter: priorityFilter
+    });
   }, []);
 
   const handleSearchClick = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    handleSearch(searchText);
+    handleSearch(searchText, {
+      textSearchTypeFilter: textSearchTypeFilter,
+      marketplaceFilter: marketplaceFilter,
+      priorityFilter: priorityFilter
+    });
   };
+
+  const handleFilterOpen = () => {
+    setFilterModalOpen(true);
+  }
+
+  const handleFilterClose = () => {
+    setFilterModalOpen(false);
+  }
 
   return (
     <Fragment>
@@ -46,12 +69,26 @@ const Search = ({
           <Button
             type="submit"
             variant="contained"
-            endIcon={<SendIcon />}
-            sx={{ ml: "1vh", mb: "1vh", fontWeight: "bold", bgcolor: "black" }}
+            sx={{
+              ml: "1vh",
+              mr: "1vh",
+              fontWeight: "bold",
+              bgcolor: "black",
+              "& .MuiButton-root": { minWidth: 25 },
+            }}
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Search"}
+            {isLoading ? (
+              <CircularProgress size={20} />
+            ) : (
+              <SendIcon fontSize="small" />
+            )}
           </Button>
+          <Tooltip title="Search Filters" placement="top">
+              <IconButton onClick={handleFilterOpen} sx={{ color: '#4188f2' }}>
+                <FilterListIcon />
+              </IconButton>
+          </Tooltip>
         </form>
       </Box>
       <Stack
@@ -76,6 +113,16 @@ const Search = ({
           </Box>
         )}
       </Stack>
+      <FilterModal 
+        open={filterModalOpen} 
+        handleClose={handleFilterClose}
+        setTextSearchTypeFilter={setTextSearchTypeFilter}
+        setMarketplaceFilter={setMarketplaceFilter}
+        setPriorityFilter={setPriorityFilter}
+        textSearchTypeFilter={textSearchTypeFilter}
+        marketplaceFilter={marketplaceFilter}
+        priorityFilter={priorityFilter}
+      />
     </Fragment>
   );
 };
