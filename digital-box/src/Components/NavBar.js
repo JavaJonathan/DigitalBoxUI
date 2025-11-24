@@ -4,8 +4,19 @@ import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ArticleIcon from '@mui/icons-material/Article';
+import { IconButton } from "@mui/material";
+import { useEffect, useState } from "react";
+import * as HttpHelper from "./HttpHelper";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const NavBar = (props) => {
+  const [reportStatus, setReportStatus] = useState(false);
+
+  useEffect(async () => {
+    await HttpHelper.getReportStatus(setReportStatus)
+  }, [])
+
   const handleOrderHistoryClick = () => {
     props.setIsLoading(true);
     props.setPdfItems([]);
@@ -34,6 +45,7 @@ const NavBar = (props) => {
     formData.append("file", file);
 
     props.handleGenerateReport(formData);
+    setReportStatus(false)
   };
 
   return (
@@ -81,26 +93,38 @@ const NavBar = (props) => {
               Order History
             </Button>
           )}
+          <div style={{ position: "absolute", right: "2vw" }}>
+          {reportStatus ? (
+            <IconButton
+            component="label"
+            variant="contained"
+            size="large"
+            sx={{ color: '#4188f2' }}
+            onClick={props.handleDownloadReportClick}
+          >
+            <ArticleIcon sx={{ ml: 0.5 }} />
+          </IconButton>
+          ) : ( <CircularProgress sx={{ mr: 2 }} size={20} /> )}
           <Button
             component="label"
             variant="contained"
             size="small"
             sx={{
-              position: "absolute",
               fontWeight: "bold",
-              right: "2vw",
-              bgcolor: "#4188f2",
+              bgcolor: "#4188f2"
             }}
+            disabled={!reportStatus}
           >
             <input
               type="file"
               accept=".csv,text/csv"
               style={{ display: "none" }}
               onChange={handleReportUpload}
-            ></input>
+            />
             Shippable Items
             <UploadFileIcon sx={{ ml: 0.5 }} fontSize="small" />
           </Button>
+          </div>
         </Toolbar>
       </AppBar>
     </Box>

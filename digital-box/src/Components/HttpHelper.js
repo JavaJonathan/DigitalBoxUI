@@ -271,3 +271,50 @@ export async function addNoteToOrder(
       setAuthToken(responseBody.Token.token);
     });
 }
+
+export async function downloadReport() {
+  const response = await fetch("http://localhost:2020/downloadReport", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      token: {
+        access_token: localStorage.getItem("DigitalBoxToken"),
+      }
+    })
+  });
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);  
+
+  const disposition = response.headers.get("Content-Disposition");
+  let filename = "DigitalBoxReport.csv";
+
+  if (disposition && disposition.includes("filename=")) {
+    filename = disposition
+      .split("filename=")[1]
+      .replace(/"/g, "");
+  }
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  window.URL.revokeObjectURL(url);
+}
+
+export async function getReportStatus(setReportStatus) {
+  let responseBody = "";
+
+  await fetch("http://localhost:2020/reportStatus", {
+    method: "GET"
+  })
+    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(() => {
+      setReportStatus(responseBody);
+    });
+}

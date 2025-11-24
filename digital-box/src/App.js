@@ -45,6 +45,10 @@ function App() {
     },
   });
 
+  const handleDownloadReportClick = () => {
+    HttpHelper.downloadReport();
+  };
+
   const handleAddNote = (fileId, note) => {
     setIsLoading(true);
     HttpHelper.addNoteToOrder(
@@ -177,6 +181,46 @@ function App() {
     }
   };
 
+  if ( !signedIn ) {
+    return (
+    <div className="App">
+      <GlobalStyles
+        styles={{
+          body: {
+            "font-family": "Alfa Slab One",
+          },
+        }}
+      />
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            minHeight: "100vh",
+            justifyContent: "center",
+            alignItems: "center",
+            fontFamily: "Alfa Slab One",
+            fontSize: "72px",
+            flexDirection: "column",
+            pb: "20px",
+            background:
+              "linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)",
+          }}
+        >
+          {"<Digital Box />"}
+          <br />
+          <Button
+            onClick={login}
+            variant="contained"
+            style={{ background: "black" }}
+            endIcon={<GoogleIcon fontSize="large" />}
+          >
+            Sign In With Google
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="App">
       <GlobalStyles
@@ -186,7 +230,6 @@ function App() {
           },
         }}
       />
-      {signedIn ? (
         <Fragment>
           <NavBar
             setIsLoading={setIsLoading}
@@ -195,6 +238,7 @@ function App() {
             setPdfItems={setPdfItems}
             setSortedByTitle={setSortedByTitle}
             handleGenerateReport={handleGenerateReport}
+            handleDownloadReportClick={handleDownloadReportClick}
           />
           {orderHistory ? (
             <Fragment>
@@ -258,34 +302,6 @@ function App() {
             </Fragment>
           )}
         </Fragment>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            minHeight: "100vh",
-            justifyContent: "center",
-            alignItems: "center",
-            fontFamily: "Alfa Slab One",
-            fontSize: "72px",
-            flexDirection: "column",
-            pb: "20px",
-            background:
-              "linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)",
-          }}
-        >
-          {"<Digital Box />"}
-          <br />
-          <Button
-            onClick={login}
-            variant="contained"
-            style={{ background: "black" }}
-            endIcon={<GoogleIcon fontSize="large" />}
-          >
-            Sign In With Google
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

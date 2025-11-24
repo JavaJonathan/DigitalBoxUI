@@ -14,7 +14,7 @@ const BoltIconButton = ({
   };
 
   return (
-    <IconButton loading={isLoading} onClick={handleClick}>
+    <IconButton onClick={handleClick}>
       {isLoading ? (
         <CircularProgress />
       ) : (
