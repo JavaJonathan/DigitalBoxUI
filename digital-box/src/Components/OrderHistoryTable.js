@@ -9,12 +9,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyBoardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import ReplayIcon from '@mui/icons-material/Replay';
 
 const OrderHistoryTable = (props) => {
   const theme = createTheme({
@@ -142,6 +142,13 @@ const OrderHistoryTable = (props) => {
               >
                 {getColumnName()}
               </TableCell>
+              <TableCell
+                sx={{ border: 2 }}
+                align="center"
+                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+              >
+                Undo?
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -160,26 +167,10 @@ const OrderHistoryTable = (props) => {
                             borderColor: "#4588f2",
                           }}
                           sx={{
-                            bgcolor: row.Checked ? "#c7f7d4" : "",
                             pl: "1vh",
                             border: 1,
                           }}
                         >
-                          <div
-                            style={{
-                              pb: "2vh",
-                              fontSize: "15px",
-                            }}
-                          >
-                            {props.renderSwitch ? (
-                              <Switch
-                                value={row.FileId}
-                                checked={row.Checked}
-                                onClick={handleSelected}
-                                color="success"
-                              ></Switch>
-                            ) : null}
-                          </div>
                           {row.FileContents[0].OrderNumber}
                         </TableCell>
                       ) : null}
@@ -189,20 +180,18 @@ const OrderHistoryTable = (props) => {
                           borderColor: "darkgray",
                         }}
                         sx={{
-                          p: "1vh",
-                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
+                          p: "1vh"
                         }}
                       >
                         <span style={{ fontWeight: "bold" }}>
-                          {`${++index}.`}&nbsp;
+                          {`${index + 1}.`}&nbsp;
                         </span>
                         {`${item.Title}`}
                       </TableCell>
                       <TableCell
                         align="center"
                         sx={{
-                          borderColor: "darkgray",
-                          bgcolor: row.Checked ? "#c7f7d4" : "",
+                          borderColor: "darkgray"
                         }}
                       >
                         {item.Quantity}
@@ -210,12 +199,30 @@ const OrderHistoryTable = (props) => {
                       <TableCell
                         align="center"
                         sx={{
-                          borderColor: "darkgray",
-                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
+                          borderColor: "darkgray"
                         }}
                       >
                         {getDateColumnValue(row, item)}
                       </TableCell>
+                      {index === 0 ? (
+                        <TableCell
+                          align="center"
+                          rowSpan={row.FileContents.length}
+                          style={{
+                            padding: "15px",
+                            fontWeight: "bold",
+                            borderColor: "#4588f2",
+                          }}
+                          sx={{
+                            pl: "1vh",
+                            border: 1,
+                          }}
+                        >
+                          <IconButton>
+                            <ReplayIcon />
+                          </IconButton>
+                        </TableCell>
+                      ) : null}
                     </TableRow>
                   ))
             )}

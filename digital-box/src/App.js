@@ -23,10 +23,10 @@ function App() {
   const [orderHistory, setOrderHistory] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sortedByTitle, setSortedByTitle] = useState(false);
+  const [sortedByNote, setSortedByNote] = useState(false);
 
   useEffect(() => {
     let token = localStorage.getItem("DigitalBoxToken");
-
     if (token) {
       setSignedIn(true);
     }
@@ -83,6 +83,8 @@ function App() {
       setAuthToken
     );
     setPage(1);
+    setSortedByTitle(false);
+    setSortedByNote(false);
   };
 
   const handleCanceledSearch = (searchValue) => {
@@ -127,7 +129,27 @@ function App() {
     );
   };
 
-  const handleSortClick = (tabValue) => {
+  const handleNoteSortClick = () => {
+    let localPdfItems = pdfItems.map((item) => {
+      return { ...item, Checked: false };
+    });
+
+    if (sortedByNote) {
+      localPdfItems.sort((itemA, itemB) => {
+        return !!itemA.note - !!itemB.note;
+      });
+      setSortedByNote(false);
+    } else {
+      setSortedByTitle(false);
+      setSortedByNote(true);
+      localPdfItems.sort((itemA, itemB) => {
+        return !!itemB.note - !!itemA.note;
+      });
+    }
+    setPdfItems(localPdfItems);
+  };
+
+  const handleTitleSortClick = (tabValue) => {
     let localPdfItems = pdfItems.map((item) => {
       return { ...item, Checked: false };
     });
@@ -181,16 +203,16 @@ function App() {
     }
   };
 
-  if ( !signedIn ) {
+  if (!signedIn) {
     return (
-    <div className="App">
-      <GlobalStyles
-        styles={{
-          body: {
-            "font-family": "Alfa Slab One",
-          },
-        }}
-      />
+      <div className="App">
+        <GlobalStyles
+          styles={{
+            body: {
+              fontFamily: "Alfa Slab One",
+            },
+          }}
+        />
         <div
           style={{
             display: "flex",
@@ -218,7 +240,7 @@ function App() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -230,78 +252,80 @@ function App() {
           },
         }}
       />
-        <Fragment>
-          <NavBar
-            setIsLoading={setIsLoading}
-            setOrderHistory={setOrderHistory}
-            orderHistory={orderHistory}
-            setPdfItems={setPdfItems}
-            setSortedByTitle={setSortedByTitle}
-            handleGenerateReport={handleGenerateReport}
-            handleDownloadReportClick={handleDownloadReportClick}
-          />
-          {orderHistory ? (
-            <Fragment>
-              {message !== "" ? (
-                <AlertUI
-                  propMessage={message}
-                  setMessage={setMessage}
-                  setSignedIn={setSignedIn}
-                />
-              ) : null}
-              <OrderHistory
-                pdfItems={pdfItems}
-                setPdfItems={setPdfItems}
-                page={page}
-                setPage={setPage}
-                handleSortClick={handleSortClick}
-                setIsLoading={setIsLoading}
-                isLoading={isLoading}
-                handleCanceledSearch={handleCanceledSearch}
-                handleShippedSearch={handleShippedSearch}
-                sortedByTitle={sortedByTitle}
-                setSortedByTitle={setSortedByTitle}
-              />
-            </Fragment>
-          ) : (
-            <Fragment>
-              {message !== "" ? (
-                <AlertUI
-                  propMessage={message}
-                  setMessage={setMessage}
-                  setSignedIn={setSignedIn}
-                />
-              ) : null}
-              <Search
-                pdfItems={pdfItems}
-                handleSearch={handleSearch}
-                setIsLoading={setIsLoading}
-                isLoading={isLoading}
-                renderSelected={true}
-              />
-              <ButtonContainer
-                page={page}
-                pdfItems={pdfItems}
-                setAuthToken={setAuthToken}
+      <Fragment>
+        <NavBar
+          setIsLoading={setIsLoading}
+          setOrderHistory={setOrderHistory}
+          orderHistory={orderHistory}
+          setPdfItems={setPdfItems}
+          setSortedByTitle={setSortedByTitle}
+          handleGenerateReport={handleGenerateReport}
+          handleDownloadReportClick={handleDownloadReportClick}
+        />
+        {orderHistory ? (
+          <Fragment>
+            {message !== "" ? (
+              <AlertUI
+                propMessage={message}
                 setMessage={setMessage}
-                setPdfItems={setPdfItems}
-                handleRefreshOrders={handleRefreshOrders}
+                setSignedIn={setSignedIn}
               />
-              <OrderTable
-                pdfItems={pdfItems}
-                setPdfItems={setPdfItems}
-                page={page}
-                setPage={setPage}
-                handleSortClick={handleSortClick}
-                renderSwitch={true}
-                sortedByTitle={sortedByTitle}
-                handleTogglePriority={handleTogglePriority}
-                isLoading={isLoading}
-                handleAddNote={handleAddNote}
+            ) : null}
+            <OrderHistory
+              pdfItems={pdfItems}
+              setPdfItems={setPdfItems}
+              page={page}
+              setPage={setPage}
+              handleSortClick={handleTitleSortClick}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
+              handleCanceledSearch={handleCanceledSearch}
+              handleShippedSearch={handleShippedSearch}
+              sortedByTitle={sortedByTitle}
+              setSortedByTitle={setSortedByTitle}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            {message !== "" ? (
+              <AlertUI
+                propMessage={message}
+                setMessage={setMessage}
+                setSignedIn={setSignedIn}
               />
-            </Fragment>
-          )}
-        </Fragment>
+            ) : null}
+            <Search
+              pdfItems={pdfItems}
+              handleSearch={handleSearch}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
+              renderSelected={true}
+            />
+            <ButtonContainer
+              page={page}
+              pdfItems={pdfItems}
+              setAuthToken={setAuthToken}
+              setMessage={setMessage}
+              setPdfItems={setPdfItems}
+              handleRefreshOrders={handleRefreshOrders}
+            />
+            <OrderTable
+              pdfItems={pdfItems}
+              setPdfItems={setPdfItems}
+              page={page}
+              setPage={setPage}
+              handleSortClick={handleTitleSortClick}
+              renderSwitch={true}
+              sortedByTitle={sortedByTitle}
+              handleTogglePriority={handleTogglePriority}
+              isLoading={isLoading}
+              handleAddNote={handleAddNote}
+              handleNoteSortClick={handleNoteSortClick}
+              sortedByNote={sortedByNote}
+            />
+          </Fragment>
+        )}
+      </Fragment>
     </div>
   );
 }

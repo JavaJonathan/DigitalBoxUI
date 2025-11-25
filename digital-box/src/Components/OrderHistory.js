@@ -62,7 +62,6 @@ const OrderHistory = ({
         page={page}
         setPage={setPage}
         handleSortClick={handleSortClick}
-        renderSwitch={false}
         sortedByTitle={sortedByTitle}
         tabValue={tabValue}
       />

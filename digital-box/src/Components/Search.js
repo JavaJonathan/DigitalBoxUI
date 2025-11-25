@@ -21,8 +21,8 @@ const Search = ({
 }) => {
   const [searchText, setSearchText] = useState("");
   const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [textSearchTypeFilter, setTextSearchTypeFilter] = useState('orders');
-  const [marketplaceFilter, setMarketplaceFilter] = useState('all');
+  const [textSearchTypeFilter, setTextSearchTypeFilter] = useState("orders");
+  const [marketplaceFilter, setMarketplaceFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Search = ({
     handleSearch(searchText, {
       textSearchTypeFilter: textSearchTypeFilter,
       marketplaceFilter: marketplaceFilter,
-      priorityFilter: priorityFilter
+      priorityFilter: priorityFilter,
     });
   }, []);
 
@@ -40,17 +40,17 @@ const Search = ({
     handleSearch(searchText, {
       textSearchTypeFilter: textSearchTypeFilter,
       marketplaceFilter: marketplaceFilter,
-      priorityFilter: priorityFilter
+      priorityFilter: priorityFilter,
     });
   };
 
   const handleFilterOpen = () => {
     setFilterModalOpen(true);
-  }
+  };
 
   const handleFilterClose = () => {
     setFilterModalOpen(false);
-  }
+  };
 
   return (
     <Fragment>
@@ -84,11 +84,15 @@ const Search = ({
               <SendIcon fontSize="small" />
             )}
           </Button>
-          <Tooltip title="Search Filters" placement="top">
-              <IconButton onClick={handleFilterOpen} sx={{ color: '#4188f2' }}>
-                <FilterListIcon />
-              </IconButton>
-          </Tooltip>
+          {
+            !tabValue ? (
+              <Tooltip title="Search Filters" placement="top">
+                <IconButton onClick={handleFilterOpen} sx={{ color: "#4188f2" }}>
+                  <FilterListIcon />
+                </IconButton>
+              </Tooltip>
+            ) : null
+          }
         </form>
       </Box>
       <Stack
@@ -113,8 +117,8 @@ const Search = ({
           </Box>
         )}
       </Stack>
-      <FilterModal 
-        open={filterModalOpen} 
+      <FilterModal
+        open={filterModalOpen}
         handleClose={handleFilterClose}
         setTextSearchTypeFilter={setTextSearchTypeFilter}
         setMarketplaceFilter={setMarketplaceFilter}

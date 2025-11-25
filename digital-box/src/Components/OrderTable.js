@@ -16,21 +16,21 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyBoardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Box, IconButton } from "@mui/material";
 import BoltIconButton from "./BoltIconButton";
-import NoteIcon from '@mui/icons-material/Note';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteIcon from "@mui/icons-material/Note";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import NoteModal from "./NoteModal";
 
 const OrderTable = (props) => {
   const theme = createTheme({
     palette: {
-      primary: grey,
+      primary: { main: '#4188f2' },
     },
   });
 
   const [pageCount, setPageCount] = useState(1);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [selectedFileId, setSelectedFileId] = useState(false);
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState("");
 
   const handleSelected = (event) => {
     let selectedItem = props.pdfItems.find(
@@ -43,16 +43,16 @@ const OrderTable = (props) => {
   const handleChange = (event, value) => {
     props.setPage(value);
   };
-  
+
   const handleNoteClick = (fileId, note) => {
     setNoteModalOpen(true);
-    setSelectedFileId(fileId)
-    setNote(note)
-  }
+    setSelectedFileId(fileId);
+    setNote(note);
+  };
 
   const handleNoteModalClose = () => {
     setNoteModalOpen(false);
-  }
+  };
 
   useEffect(() => {
     getAmountOfPages();
@@ -147,11 +147,22 @@ const OrderTable = (props) => {
                 Priority
               </TableCell>
               <TableCell
-                sx={{ border: 2 }}
+                sx={{ border: 2, cursor: "pointer" }}
                 align="center"
                 style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                onClick={() => props.handleNoteSortClick()}
               >
                 Notes
+                <Box
+                  component="span"
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  {props.sortedByNote ? (
+                    <KeyBoardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </Box>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -160,7 +171,7 @@ const OrderTable = (props) => {
               index > props.page * 25 - 1 || index < props.page * 25 - 25
                 ? null
                 : row.FileContents.map((item, index) => (
-                    <TableRow>
+                    <TableRow key={index}>
                       {index === 0 ? (
                         <TableCell
                           align="center"
@@ -229,33 +240,46 @@ const OrderTable = (props) => {
                       </TableCell>
                       {index === 1 ? (
                         <TableCell
-                        align="center"
-                        sx={{
-                          bgcolor: row.Checked ? "#c7f7d4" : "",
-                          border: '1px solid darkgray'
-                        }}
-                        rowSpan={row.FileContents.length}
-                      >
-                        <BoltIconButton priority={row.priority} handleTogglePriority={props.handleTogglePriority} fileId={row.FileId} isLoading={props.isLoading}/>
-                      </TableCell>
+                          align="center"
+                          sx={{
+                            bgcolor: row.Checked ? "#c7f7d4" : "",
+                            border: "1px solid darkgray",
+                          }}
+                          rowSpan={row.FileContents.length}
+                        >
+                          <BoltIconButton
+                            priority={row.priority}
+                            handleTogglePriority={props.handleTogglePriority}
+                            fileId={row.FileId}
+                            isLoading={props.isLoading}
+                          />
+                        </TableCell>
                       ) : null}
                       {index === 1 ? (
                         <TableCell
-                        align="center"
-                        sx={{
-                          borderColor: "darkgray",
-                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
-                          borderLeft: 1
-                        }}
-                        rowSpan={row.FileContents.length}
-                        onClick={() => handleNoteClick(row.FileId, row.note || '')}
-                      >
-                      <IconButton>
-                        {row.note ? <NoteIcon fontSize="large" sx={{ color: "#4188f2" }} /> : <NoteAddIcon fontSize="large" />}
-                    </IconButton>
-                      </TableCell>
+                          align="center"
+                          sx={{
+                            borderColor: "darkgray",
+                            bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
+                            borderLeft: 1,
+                          }}
+                          rowSpan={row.FileContents.length}
+                          onClick={() =>
+                            handleNoteClick(row.FileId, row.note || "")
+                          }
+                        >
+                          <IconButton>
+                            {row.note ? (
+                              <NoteIcon
+                                fontSize="large"
+                                sx={{ color: "#4188f2" }}
+                              />
+                            ) : (
+                              <NoteAddIcon fontSize="large" />
+                            )}
+                          </IconButton>
+                        </TableCell>
                       ) : null}
-                      
                     </TableRow>
                   ))
             )}
@@ -273,7 +297,13 @@ const OrderTable = (props) => {
           sx={{ color: "white" }}
         />
       </Stack>
-      <NoteModal open={noteModalOpen} handleClose={handleNoteModalClose} note={note} handleAddNote={props.handleAddNote} selectedFileId={selectedFileId}/>
+      <NoteModal
+        open={noteModalOpen}
+        handleClose={handleNoteModalClose}
+        note={note}
+        handleAddNote={props.handleAddNote}
+        selectedFileId={selectedFileId}
+      />
     </ThemeProvider>
   );
 };

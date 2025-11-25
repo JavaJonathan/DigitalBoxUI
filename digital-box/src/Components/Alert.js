@@ -52,10 +52,6 @@ const AlertUI = (props) => {
       setUiMessage(props.propMessage);
       props.setSignedIn(false);
       props.setMessage("");
-    } else if (props.propMessage === "Search results returned successfully!") {
-      setSeverityState("success");
-      setOpen(true);
-      setUiMessage(props.propMessage);
     } else if (
       props.propMessage ===
       "Some of your files were not downloaded. Please check the api console to see which files failed."
@@ -63,8 +59,11 @@ const AlertUI = (props) => {
       setSeverityState("warning");
       setOpen(true);
       setUiMessage(props.propMessage);
-    } else if (props.propMessage === "Priority saved successfully.") {
-      setSeverityState("success");
+    } else if (
+      props.propMessage ===
+      "Generating report.. Once completed, you can refresh the page and click the Paper Icon to download."
+    ) {
+      setSeverityState("warning");
       setOpen(true);
       setUiMessage(props.propMessage);
     }
@@ -83,6 +82,7 @@ const AlertUI = (props) => {
         marginTop: "3vh",
         fontFamily: "Alfa Slab One",
       }}
+      variant="filled"
     >
       {UIMessage}
     </Alert>

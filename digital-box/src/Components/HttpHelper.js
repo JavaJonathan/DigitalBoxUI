@@ -65,7 +65,7 @@ export async function searchOrders(
 ) {
   let responseBody = "";
 
-  console.log(filters)
+  console.log(filters);
 
   await fetch("http://localhost:2020/search", {
     method: "POST",
@@ -77,7 +77,7 @@ export async function searchOrders(
         access_token: localStorage.getItem("DigitalBoxToken"),
       },
       searchValue: searchValue,
-      filters: filters
+      filters: filters,
     }),
   })
     .then((response) => response.json().then((r) => (responseBody = r)))
@@ -107,7 +107,7 @@ export async function searchShippedOrders(
       token: {
         access_token: localStorage.getItem("DigitalBoxToken"),
       },
-      Filter: searchValue,
+      searchValue: searchValue,
     }),
   })
     .then((response) => response.json().then((r) => (responseBody = r)))
@@ -137,7 +137,7 @@ export async function searchCanceledOrders(
       token: {
         access_token: localStorage.getItem("DigitalBoxToken"),
       },
-      Filter: searchValue,
+      searchValue: searchValue,
     }),
   })
     .then((response) => response.json().then((r) => (responseBody = r)))
@@ -281,20 +281,18 @@ export async function downloadReport() {
     body: JSON.stringify({
       token: {
         access_token: localStorage.getItem("DigitalBoxToken"),
-      }
-    })
+      },
+    }),
   });
 
   const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);  
+  const url = window.URL.createObjectURL(blob);
 
   const disposition = response.headers.get("Content-Disposition");
   let filename = "DigitalBoxReport.csv";
 
   if (disposition && disposition.includes("filename=")) {
-    filename = disposition
-      .split("filename=")[1]
-      .replace(/"/g, "");
+    filename = disposition.split("filename=")[1].replace(/"/g, "");
   }
 
   const a = document.createElement("a");
@@ -311,7 +309,7 @@ export async function getReportStatus(setReportStatus) {
   let responseBody = "";
 
   await fetch("http://localhost:2020/reportStatus", {
-    method: "GET"
+    method: "GET",
   })
     .then((response) => response.json().then((r) => (responseBody = r)))
     .then(() => {
