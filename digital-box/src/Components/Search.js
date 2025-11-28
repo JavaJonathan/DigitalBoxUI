@@ -5,9 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import SendIcon from "@mui/icons-material/Send";
-import { Badge, Box, IconButton, Tooltip } from "@mui/material";
-import LinearProgress from "@mui/material/LinearProgress";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterModal from "./FilterModal";
 
@@ -15,7 +13,6 @@ const Search = ({
   setIsLoading,
   pdfItems,
   handleSearch,
-  isLoading,
   renderSelected,
   tabValue,
 }) => {
@@ -76,13 +73,8 @@ const Search = ({
               bgcolor: "black",
               "& .MuiButton-root": { minWidth: 25 },
             }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <CircularProgress size={20} />
-            ) : (
-              <SendIcon fontSize="small" />
-            )}
+          >            
+            <SendIcon fontSize="small" />
           </Button>
           {
             !tabValue ? (
@@ -102,11 +94,7 @@ const Search = ({
         alignItems="center"
         justifyContent="center"
       >
-        {isLoading ? (
-          <Box component="span" sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-        ) : renderSelected ? (
+        {renderSelected ? (
           <Box component="span" sx={{ fontSize: 24, color: "black" }}>
             {pdfItems.filter((item) => item.Checked !== false).length} Order(s)
             Selected | {pdfItems.length} Order(s) Total

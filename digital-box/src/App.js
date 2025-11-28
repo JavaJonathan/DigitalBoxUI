@@ -12,6 +12,7 @@ import OrderHistory from "./Components/OrderHistory";
 import { useGoogleLogin } from "@react-oauth/google";
 import ButtonContainer from "./Components/ButtonContainer";
 import OrderTable from "./Components/OrderTable";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function App() {
   //state defined in App.js is gloabl and passed via props, we could use this opportunity to implement the Redux pattern
@@ -109,7 +110,7 @@ function App() {
     setPage(1);
   };
 
-  const handleRefreshOrders = () => {
+  const handleSyncDatabase = () => {
     HttpHelper.refreshOrders(
       setPdfItems,
       setMessage,
@@ -307,7 +308,7 @@ function App() {
               setAuthToken={setAuthToken}
               setMessage={setMessage}
               setPdfItems={setPdfItems}
-              handleRefreshOrders={handleRefreshOrders}
+              handleSyncDatabase={handleSyncDatabase}
             />
             <OrderTable
               pdfItems={pdfItems}
@@ -325,6 +326,12 @@ function App() {
             />
           </Fragment>
         )}
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isLoading}
+        >
+          <CircularProgress size={100} color="primary" />
+        </Backdrop>
       </Fragment>
     </div>
   );
