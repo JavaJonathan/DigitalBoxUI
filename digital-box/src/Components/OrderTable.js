@@ -1,40 +1,38 @@
-import React, { useEffect, useState } from "react";
-import "../App.css";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyBoardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Box, IconButton } from "@mui/material";
-import BoltIconButton from "./BoltIconButton";
-import NoteIcon from "@mui/icons-material/Note";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import NoteModal from "./NoteModal";
+import React, { useEffect, useState } from 'react';
+import '../App.css';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyBoardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Box, IconButton } from '@mui/material';
+import BoltIconButton from './BoltIconButton';
+import NoteIcon from '@mui/icons-material/Note';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteModal from './NoteModal';
 
-const OrderTable = (props) => {
+const OrderTable = props => {
   const theme = createTheme({
     palette: {
-      primary: { main: '#4188f2' },
-    },
+      primary: { main: '#4188f2' }
+    }
   });
 
   const [pageCount, setPageCount] = useState(1);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [selectedFileId, setSelectedFileId] = useState(false);
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState('');
 
-  const handleSelected = (event) => {
-    let selectedItem = props.pdfItems.find(
-      (item) => item.FileId === event.target.value
-    );
+  const handleSelected = event => {
+    let selectedItem = props.pdfItems.find(item => item.FileId === event.target.value);
     selectedItem.Checked = !selectedItem.Checked;
     props.setPdfItems([...props.pdfItems]);
   };
@@ -58,10 +56,10 @@ const OrderTable = (props) => {
   }, [props.pdfItems]);
 
   useEffect(() => {
-    let newPdfItems = props.pdfItems.map((item) => {
+    let newPdfItems = props.pdfItems.map(item => {
       return {
         ...item,
-        Checked: false,
+        Checked: false
       };
     });
     props.setPdfItems([...newPdfItems]);
@@ -83,84 +81,70 @@ const OrderTable = (props) => {
         component={Paper}
         sx={{
           flexGrow: 1,
-          maxWidth: "94%",
-          ml: "3%",
-          mr: "3%",
-          mt: ".5%",
+          maxWidth: '94%',
+          ml: '3%',
+          mr: '3%',
+          mt: '.5%',
           boxShadow: 10,
-          borderRadius: "20px",
+          borderRadius: '20px'
         }}
       >
-        <Table sx={{ whiteSpace: "normal", borderColor: "grey" }}>
+        <Table sx={{ whiteSpace: 'normal', borderColor: 'grey' }}>
           <TableHead
             style={{
               background:
-                "linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)",
+                'linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)'
             }}
           >
-            <TableRow sx={{ border: 2, whiteSpace: "normal" }}>
+            <TableRow sx={{ border: 2, whiteSpace: 'normal' }}>
               <TableCell
                 sx={{ border: 2 }}
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
                 className="cell"
               >
                 Order Number
               </TableCell>
               <TableCell
-                sx={{ border: 2, cursor: "pointer" }}
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                sx={{ border: 2, cursor: 'pointer' }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
                 align="center"
                 onClick={() => props.handleSortClick(props.tabValue)}
               >
                 Title
-                <Box
-                  component="span"
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  {props.sortedByTitle ? (
-                    <KeyBoardArrowUpIcon />
-                  ) : (
-                    <KeyboardArrowDownIcon />
-                  )}
+                <Box component="span" sx={{ display: 'flex', justifyContent: 'center' }}>
+                  {props.sortedByTitle ? <KeyBoardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </Box>
               </TableCell>
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
               >
                 Quantity
               </TableCell>
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
               >
                 Ship Date
               </TableCell>
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
               >
                 Priority
               </TableCell>
               <TableCell
-                sx={{ border: 2, cursor: "pointer" }}
+                sx={{ border: 2, cursor: 'pointer' }}
                 align="center"
-                style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
                 onClick={() => props.handleNoteSortClick()}
               >
                 Notes
-                <Box
-                  component="span"
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  {props.sortedByNote ? (
-                    <KeyBoardArrowUpIcon />
-                  ) : (
-                    <KeyboardArrowDownIcon />
-                  )}
+                <Box component="span" sx={{ display: 'flex', justifyContent: 'center' }}>
+                  {props.sortedByNote ? <KeyBoardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </Box>
               </TableCell>
             </TableRow>
@@ -176,20 +160,20 @@ const OrderTable = (props) => {
                           align="center"
                           rowSpan={row.FileContents.length}
                           style={{
-                            padding: "15px",
-                            fontWeight: "bold",
-                            borderColor: "#4588f2",
+                            padding: '15px',
+                            fontWeight: 'bold',
+                            borderColor: '#4588f2'
                           }}
                           sx={{
-                            bgcolor: row.Checked ? "#c7f7d4" : "",
-                            pl: "1vh",
-                            border: 1,
+                            bgcolor: row.Checked ? '#c7f7d4' : '',
+                            pl: '1vh',
+                            border: 1
                           }}
                         >
                           <div
                             style={{
-                              pb: "2vh",
-                              fontSize: "15px",
+                              pb: '2vh',
+                              fontSize: '15px'
                             }}
                           >
                             {props.renderSwitch ? (
@@ -206,24 +190,22 @@ const OrderTable = (props) => {
                       ) : null}
                       <TableCell
                         style={{
-                          wordBreak: "break-word",
-                          borderColor: "darkgray",
+                          wordBreak: 'break-word',
+                          borderColor: 'darkgray'
                         }}
                         sx={{
-                          p: "1vh",
-                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
+                          p: '1vh',
+                          bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1'
                         }}
                       >
-                        <span style={{ fontWeight: "bold" }}>
-                          {`${++index}.`}&nbsp;
-                        </span>
+                        <span style={{ fontWeight: 'bold' }}>{`${++index}.`}&nbsp;</span>
                         {`${item.Title}`}
                       </TableCell>
                       <TableCell
                         align="center"
                         sx={{
-                          borderColor: "darkgray",
-                          bgcolor: row.Checked ? "#c7f7d4" : "",
+                          borderColor: 'darkgray',
+                          bgcolor: row.Checked ? '#c7f7d4' : ''
                         }}
                       >
                         {item.Quantity}
@@ -231,8 +213,8 @@ const OrderTable = (props) => {
                       <TableCell
                         align="center"
                         sx={{
-                          borderColor: "darkgray",
-                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
+                          borderColor: 'darkgray',
+                          bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1'
                         }}
                       >
                         {item.ShipDate}
@@ -241,8 +223,8 @@ const OrderTable = (props) => {
                         <TableCell
                           align="center"
                           sx={{
-                            bgcolor: row.Checked ? "#c7f7d4" : "",
-                            border: "1px solid darkgray",
+                            bgcolor: row.Checked ? '#c7f7d4' : '',
+                            border: '1px solid darkgray'
                           }}
                           rowSpan={row.FileContents.length}
                         >
@@ -258,21 +240,16 @@ const OrderTable = (props) => {
                         <TableCell
                           align="center"
                           sx={{
-                            borderColor: "darkgray",
-                            bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
-                            borderLeft: 1,
+                            borderColor: 'darkgray',
+                            bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1',
+                            borderLeft: 1
                           }}
                           rowSpan={row.FileContents.length}
-                          onClick={() =>
-                            handleNoteClick(row.FileId, row.note || "")
-                          }
+                          onClick={() => handleNoteClick(row.FileId, row.note || '')}
                         >
                           <IconButton>
                             {row.note ? (
-                              <NoteIcon
-                                fontSize="large"
-                                sx={{ color: "#4188f2" }}
-                              />
+                              <NoteIcon fontSize="large" sx={{ color: '#4188f2' }} />
                             ) : (
                               <NoteAddIcon fontSize="large" />
                             )}
@@ -285,7 +262,7 @@ const OrderTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack spacing={2} alignItems="center" sx={{ mb: "2vh", mt: "2vh" }}>
+      <Stack spacing={2} alignItems="center" sx={{ mb: '2vh', mt: '2vh' }}>
         <Pagination
           count={pageCount}
           size="large"
@@ -293,7 +270,7 @@ const OrderTable = (props) => {
           onChange={handleChange}
           color="primary"
           variant="outlined"
-          sx={{ color: "white" }}
+          sx={{ color: 'white' }}
         />
       </Stack>
       <NoteModal

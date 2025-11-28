@@ -1,19 +1,14 @@
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
-const ShipOrdersModal = ({
-  open,
-  handleClose,
-  handleClick,
-  shippedOrderCount
-}) => {
+const ShipOrdersModal = ({ open, handleClose, handleClick, shippedOrderCount }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>{"Ship Orders?"}</DialogTitle>
+      <DialogTitle>{'Ship Orders? 🚚'}</DialogTitle>
       <DialogContent>
         <Typography>{`Are you sure you want to ship ${shippedOrderCount} order(s)?`}</Typography>
       </DialogContent>

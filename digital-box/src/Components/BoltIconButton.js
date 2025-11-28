@@ -1,37 +1,35 @@
-import BoltIcon from "@mui/icons-material/Bolt";
-import IconButton from "@mui/material/IconButton";
-import { yellow } from "@mui/material/colors";
-import { useState } from "react";
-import PriorityModal from "./PriorityModal";
+import BoltIcon from '@mui/icons-material/Bolt';
+import IconButton from '@mui/material/IconButton';
+import { yellow } from '@mui/material/colors';
+import { useState } from 'react';
+import PriorityModal from './PriorityModal';
 
-const BoltIconButton = ({
-  fileId,
-  priority,
-  handleTogglePriority,
-}) => {
-  const [open, setOpen] = useState(false)
+const BoltIconButton = ({ fileId, priority, handleTogglePriority }) => {
+  const [open, setOpen] = useState(false);
   const handleClick = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handlePrioritySubmit = () => {
-    setOpen(false)
+    setOpen(false);
     handleTogglePriority(fileId, priority);
   };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <>
       <IconButton onClick={handleClick}>
-        <BoltIcon
-          fontSize="large"
-          sx={{ color: priority ? yellow[900] : "disabled" }}
-        />
+        <BoltIcon fontSize="large" sx={{ color: priority ? yellow[900] : 'disabled' }} />
       </IconButton>
-      <PriorityModal open={open} handleClose={handleClose} handleClick={handlePrioritySubmit} priority={priority}></PriorityModal>
+      <PriorityModal
+        open={open}
+        handleClose={handleClose}
+        handleClick={handlePrioritySubmit}
+        priority={priority}
+      ></PriorityModal>
     </>
   );
 };

@@ -5,17 +5,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 
-const PriorityModal = ({ open, handleClose, handleClick, priority }) => {
+const UndoShippedOrderModal = ({ open, handleClose, handleClick }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>
-        {priority ? 'Remove Priority Status? ⚡' : 'Mark Order As Priority? ⚡'}
-      </DialogTitle>
+      <DialogTitle>{'Undo Ship? ↩️'}</DialogTitle>
       <DialogContent>
         <Typography>
-          {priority
-            ? 'Are you sure you want to remove this order from the priority orders?'
-            : 'Are you sure you want to mark this order as a priority order?'}
+          {'Are you sure you want to put this order back into the To Be Shipped Folder?'}
         </Typography>
       </DialogContent>
       <DialogActions>
@@ -30,4 +26,4 @@ const PriorityModal = ({ open, handleClose, handleClick, priority }) => {
   );
 };
 
-export default PriorityModal;
+export default UndoShippedOrderModal;

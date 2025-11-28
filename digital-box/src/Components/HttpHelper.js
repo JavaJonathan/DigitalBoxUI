@@ -1,25 +1,20 @@
-export async function cancelOrders(
-  setPdfItems,
-  setMessage,
-  orders,
-  setAuthToken
-) {
-  let responseBody = "";
+export async function cancelOrders(setPdfItems, setMessage, orders, setAuthToken) {
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/cancel", {
-    method: "POST",
+  await fetch('http://localhost:2020/cancel', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
       Orders: orders,
-      Action: "cancel",
-    }),
+      Action: 'cancel'
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -27,28 +22,23 @@ export async function cancelOrders(
     });
 }
 
-export async function shipOrders(
-  setPdfItems,
-  setMessage,
-  orders,
-  setAuthToken
-) {
-  let responseBody = "";
+export async function shipOrders(setPdfItems, setMessage, orders, setAuthToken) {
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/ship", {
-    method: "POST",
+  await fetch('http://localhost:2020/ship', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
       Orders: orders,
-      Action: "ship",
-    }),
+      Action: 'ship'
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -63,24 +53,24 @@ export async function searchOrders(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
   console.log(filters);
 
-  await fetch("http://localhost:2020/search", {
-    method: "POST",
+  await fetch('http://localhost:2020/search', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
       searchValue: searchValue,
-      filters: filters,
-    }),
+      filters: filters
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -96,21 +86,21 @@ export async function searchShippedOrders(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/shippedOrders", {
-    method: "POST",
+  await fetch('http://localhost:2020/shippedOrders', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
-      searchValue: searchValue,
-    }),
+      searchValue: searchValue
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -126,21 +116,21 @@ export async function searchCanceledOrders(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/canceledOrders", {
-    method: "POST",
+  await fetch('http://localhost:2020/canceledOrders', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
-      searchValue: searchValue,
-    }),
+      searchValue: searchValue
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -156,21 +146,21 @@ export async function refreshOrders(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/", {
-    method: "POST",
+  await fetch('http://localhost:2020/', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
-      Filter: searchValue,
-    }),
+      Filter: searchValue
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -187,22 +177,22 @@ export async function togglePriority(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/priority", {
-    method: "POST",
+  await fetch('http://localhost:2020/priority', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
       priority: priority,
-      FileId: fileId,
-    }),
+      FileId: fileId
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -218,20 +208,20 @@ export async function generateReport(
   setAuthToken,
   formData
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
   formData.append(
-    "token",
+    'token',
     JSON.stringify({
-      access_token: localStorage.getItem("DigitalBoxToken"),
+      access_token: localStorage.getItem('DigitalBoxToken')
     })
   );
 
-  await fetch("http://localhost:2020/generateReport", {
-    method: "POST",
-    body: formData,
+  await fetch('http://localhost:2020/generateReport', {
+    method: 'POST',
+    body: formData
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -248,22 +238,22 @@ export async function addNoteToOrder(
   setIsLoading,
   setAuthToken
 ) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/addNote", {
-    method: "POST",
+  await fetch('http://localhost:2020/addNote', {
+    method: 'POST',
     headers: {
-      "content-type": "text/plain",
+      'content-type': 'text/plain'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
+        access_token: localStorage.getItem('DigitalBoxToken')
       },
       note: note,
-      FileId: fileId,
-    }),
+      FileId: fileId
+    })
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
@@ -273,29 +263,29 @@ export async function addNoteToOrder(
 }
 
 export async function downloadReport() {
-  const response = await fetch("http://localhost:2020/downloadReport", {
-    method: "POST",
+  const response = await fetch('http://localhost:2020/downloadReport', {
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json'
     },
     body: JSON.stringify({
       token: {
-        access_token: localStorage.getItem("DigitalBoxToken"),
-      },
-    }),
+        access_token: localStorage.getItem('DigitalBoxToken')
+      }
+    })
   });
 
   const blob = await response.blob();
   const url = window.URL.createObjectURL(blob);
 
-  const disposition = response.headers.get("Content-Disposition");
-  let filename = "DigitalBoxReport.csv";
+  const disposition = response.headers.get('Content-Disposition');
+  let filename = 'DigitalBoxReport.csv';
 
-  if (disposition && disposition.includes("filename=")) {
-    filename = disposition.split("filename=")[1].replace(/"/g, "");
+  if (disposition && disposition.includes('filename=')) {
+    filename = disposition.split('filename=')[1].replace(/"/g, '');
   }
 
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
@@ -306,13 +296,73 @@ export async function downloadReport() {
 }
 
 export async function getReportStatus(setReportStatus) {
-  let responseBody = "";
+  let responseBody = '';
 
-  await fetch("http://localhost:2020/reportStatus", {
-    method: "GET",
+  await fetch('http://localhost:2020/reportStatus', {
+    method: 'GET'
   })
-    .then((response) => response.json().then((r) => (responseBody = r)))
+    .then(response => response.json().then(r => (responseBody = r)))
     .then(() => {
       setReportStatus(responseBody);
+    });
+}
+
+export async function undoCancelledOrder(
+  setPdfItems,
+  setMessage,
+  fileId,
+  setIsLoading,
+  setAuthToken
+) {
+  let responseBody = '';
+
+  await fetch('http://localhost:2020/undoCancel', {
+    method: 'POST',
+    headers: {
+      'content-type': 'text/plain'
+    },
+    body: JSON.stringify({
+      token: {
+        access_token: localStorage.getItem('DigitalBoxToken')
+      },
+      FileId: fileId
+    })
+  })
+    .then(response => response.json().then(r => (responseBody = r)))
+    .then(() => {
+      setMessage(responseBody.Message);
+      setPdfItems(responseBody.Orders);
+      setIsLoading(false);
+      setAuthToken(responseBody.Token.token);
+    });
+}
+
+export async function undoShippedOrder(
+  setPdfItems,
+  setMessage,
+  fileId,
+  setIsLoading,
+  setAuthToken
+) {
+  let responseBody = '';
+
+  await fetch('http://localhost:2020/undoShip', {
+    method: 'POST',
+    headers: {
+      'content-type': 'text/plain'
+    },
+    body: JSON.stringify({
+      token: {
+        access_token: localStorage.getItem('DigitalBoxToken')
+      },
+      FileId: fileId
+    })
+  })
+    .then(response => response.json().then(r => (responseBody = r)))
+    .then(() => {
+      setMessage(responseBody.Message);
+      setPdfItems(responseBody.Orders);
+      setIsLoading(false);
+      setAuthToken(responseBody.Token.token);
     });
 }

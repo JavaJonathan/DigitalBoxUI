@@ -1,25 +1,25 @@
-import "./App.css";
-import React, { Fragment, useEffect, useState } from "react";
-import * as HttpHelper from "./Components/HttpHelper";
-import NavBar from "./Components/NavBar";
-import AlertUI from "./Components/Alert";
-import GoogleIcon from "@mui/icons-material/Google";
-import Button from "@mui/material/Button";
-import Search from "./Components/Search";
-import "@fontsource/alfa-slab-one";
-import GlobalStyles from "@mui/material/GlobalStyles";
-import OrderHistory from "./Components/OrderHistory";
-import { useGoogleLogin } from "@react-oauth/google";
-import ButtonContainer from "./Components/ButtonContainer";
-import OrderTable from "./Components/OrderTable";
-import { Backdrop, CircularProgress } from "@mui/material";
+import './App.css';
+import React, { Fragment, useEffect, useState } from 'react';
+import * as HttpHelper from './Components/HttpHelper';
+import NavBar from './Components/NavBar';
+import AlertUI from './Components/Alert';
+import GoogleIcon from '@mui/icons-material/Google';
+import Button from '@mui/material/Button';
+import Search from './Components/Search';
+import '@fontsource/alfa-slab-one';
+import GlobalStyles from '@mui/material/GlobalStyles';
+import OrderHistory from './Components/OrderHistory';
+import { useGoogleLogin } from '@react-oauth/google';
+import ButtonContainer from './Components/ButtonContainer';
+import OrderTable from './Components/OrderTable';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 function App() {
   //state defined in App.js is gloabl and passed via props, we could use this opportunity to implement the Redux pattern
   const [pdfItems, setPdfItems] = useState([]);
-  const [authToken, setAuthToken] = useState("");
+  const [authToken, setAuthToken] = useState('');
   const [signedIn, setSignedIn] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [page, setPage] = useState(1);
   const [orderHistory, setOrderHistory] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,24 +27,40 @@ function App() {
   const [sortedByNote, setSortedByNote] = useState(false);
 
   useEffect(() => {
-    let token = localStorage.getItem("DigitalBoxToken");
+    let token = localStorage.getItem('DigitalBoxToken');
     if (token) {
       setSignedIn(true);
     }
   }, []);
 
   useEffect(() => {
-    if (authToken !== "") localStorage.setItem("DigitalBoxToken", authToken);
+    if (authToken !== '') localStorage.setItem('DigitalBoxToken', authToken);
   }, [authToken]);
 
   const login = useGoogleLogin({
     scope:
-      "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.appfolder https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.resource https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.readonly.metadata https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly",
-    onSuccess: (tokenResponse) => {
-      localStorage.setItem("DigitalBoxToken", `${tokenResponse.access_token}`);
+      'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.appfolder https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.resource https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.readonly.metadata https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly',
+    onSuccess: tokenResponse => {
+      localStorage.setItem('DigitalBoxToken', `${tokenResponse.access_token}`);
       setSignedIn(true);
-    },
+    }
   });
+
+  const handleUndoCancel = async fileId => {
+    setIsLoading(true);
+    await HttpHelper.undoCancelledOrder(
+      setPdfItems,
+      setMessage,
+      fileId,
+      setIsLoading,
+      setAuthToken
+    );
+  };
+
+  const handleUndoShip = async fileId => {
+    setIsLoading(true);
+    await HttpHelper.undoShippedOrder(setPdfItems, setMessage, fileId, setIsLoading, setAuthToken);
+  };
 
   const handleDownloadReportClick = () => {
     HttpHelper.downloadReport();
@@ -52,14 +68,7 @@ function App() {
 
   const handleAddNote = (fileId, note) => {
     setIsLoading(true);
-    HttpHelper.addNoteToOrder(
-      setPdfItems,
-      setMessage,
-      fileId,
-      note,
-      setIsLoading,
-      setAuthToken
-    );
+    HttpHelper.addNoteToOrder(setPdfItems, setMessage, fileId, note, setIsLoading, setAuthToken);
   };
 
   const handleTogglePriority = (fileId, priority) => {
@@ -88,7 +97,7 @@ function App() {
     setSortedByNote(false);
   };
 
-  const handleCanceledSearch = (searchValue) => {
+  const handleCanceledSearch = searchValue => {
     HttpHelper.searchCanceledOrders(
       setPdfItems,
       setMessage,
@@ -99,7 +108,7 @@ function App() {
     setPage(1);
   };
 
-  const handleShippedSearch = (searchValue) => {
+  const handleShippedSearch = searchValue => {
     HttpHelper.searchShippedOrders(
       setPdfItems,
       setMessage,
@@ -111,27 +120,15 @@ function App() {
   };
 
   const handleSyncDatabase = () => {
-    HttpHelper.refreshOrders(
-      setPdfItems,
-      setMessage,
-      "",
-      setIsLoading,
-      setAuthToken
-    );
+    HttpHelper.refreshOrders(setPdfItems, setMessage, '', setIsLoading, setAuthToken);
   };
 
-  const handleGenerateReport = (formData) => {
-    HttpHelper.generateReport(
-      setPdfItems,
-      setMessage,
-      setIsLoading,
-      setAuthToken,
-      formData
-    );
+  const handleGenerateReport = formData => {
+    HttpHelper.generateReport(setPdfItems, setMessage, setIsLoading, setAuthToken, formData);
   };
 
   const handleNoteSortClick = () => {
-    let localPdfItems = pdfItems.map((item) => {
+    let localPdfItems = pdfItems.map(item => {
       return { ...item, Checked: false };
     });
 
@@ -150,53 +147,42 @@ function App() {
     setPdfItems(localPdfItems);
   };
 
-  const handleTitleSortClick = (tabValue) => {
-    let localPdfItems = pdfItems.map((item) => {
+  const handleTitleSortClick = tabValue => {
+    let localPdfItems = pdfItems.map(item => {
       return { ...item, Checked: false };
     });
 
     if (sortedByTitle && tabValue !== undefined) {
       if (tabValue === 0) {
-        localPdfItems.sort(
-          (a, b) => Date.parse(b.shippedOn) - Date.parse(a.shippedOn)
-        );
+        localPdfItems.sort((a, b) => Date.parse(b.shippedOn) - Date.parse(a.shippedOn));
       } else {
-        localPdfItems.sort(
-          (a, b) => Date.parse(b.canceledOn) - Date.parse(a.canceledOn)
-        );
+        localPdfItems.sort((a, b) => Date.parse(b.canceledOn) - Date.parse(a.canceledOn));
       }
       setPdfItems(localPdfItems);
       setSortedByTitle(false);
     } else if (sortedByTitle && tabValue === undefined) {
       localPdfItems.sort((a, b) => {
-        if (a.FileContents[0].ShipDate === "") {
-          return (
-            Date.parse(a.FileContents[1].ShipDate) -
-            Date.parse(b.FileContents[0].ShipDate)
-          );
+        if (a.FileContents[0].ShipDate === '') {
+          return Date.parse(a.FileContents[1].ShipDate) - Date.parse(b.FileContents[0].ShipDate);
         }
 
-        return (
-          Date.parse(a.FileContents[0].ShipDate) -
-          Date.parse(b.FileContents[0].ShipDate)
-        );
+        return Date.parse(a.FileContents[0].ShipDate) - Date.parse(b.FileContents[0].ShipDate);
       });
       setPdfItems(localPdfItems);
       setSortedByTitle(false);
     } else {
       localPdfItems.sort((a, b) => {
         //put empty strings at the end of the list
-        if (a.FileContents[0].ShipDate === "") {
+        if (a.FileContents[0].ShipDate === '') {
           return 1;
         }
-        if (b.FileContents[0].ShipDate === "") {
+        if (b.FileContents[0].ShipDate === '') {
           return -1;
         }
 
         return (
           a.FileContents[0].Title.localeCompare(b.FileContents[0].Title) ||
-          Date.parse(a.FileContents[0].ShipDate) -
-            Date.parse(b.FileContents[0].ShipDate)
+          Date.parse(a.FileContents[0].ShipDate) - Date.parse(b.FileContents[0].ShipDate)
         );
       });
       setPdfItems(localPdfItems);
@@ -210,31 +196,31 @@ function App() {
         <GlobalStyles
           styles={{
             body: {
-              fontFamily: "Alfa Slab One",
-            },
+              fontFamily: 'Alfa Slab One'
+            }
           }}
         />
         <div
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            minHeight: "100vh",
-            justifyContent: "center",
-            alignItems: "center",
-            fontFamily: "Alfa Slab One",
-            fontSize: "72px",
-            flexDirection: "column",
-            pb: "20px",
+            minHeight: '100vh',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontFamily: 'Alfa Slab One',
+            fontSize: '72px',
+            flexDirection: 'column',
+            pb: '20px',
             background:
-              "linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)",
+              'linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)'
           }}
         >
-          {"<Digital Box />"}
+          {'<Digital Box />'}
           <br />
           <Button
             onClick={login}
             variant="contained"
-            style={{ background: "black" }}
+            style={{ background: 'black' }}
             endIcon={<GoogleIcon fontSize="large" />}
           >
             Sign In With Google
@@ -249,8 +235,8 @@ function App() {
       <GlobalStyles
         styles={{
           body: {
-            "font-family": "Alfa Slab One",
-          },
+            'font-family': 'Alfa Slab One'
+          }
         }}
       />
       <Fragment>
@@ -265,12 +251,8 @@ function App() {
         />
         {orderHistory ? (
           <Fragment>
-            {message !== "" ? (
-              <AlertUI
-                propMessage={message}
-                setMessage={setMessage}
-                setSignedIn={setSignedIn}
-              />
+            {message !== '' ? (
+              <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
             ) : null}
             <OrderHistory
               pdfItems={pdfItems}
@@ -284,16 +266,14 @@ function App() {
               handleShippedSearch={handleShippedSearch}
               sortedByTitle={sortedByTitle}
               setSortedByTitle={setSortedByTitle}
+              handleUndoCancel={handleUndoCancel}
+              handleUndoShip={handleUndoShip}
             />
           </Fragment>
         ) : (
           <Fragment>
-            {message !== "" ? (
-              <AlertUI
-                propMessage={message}
-                setMessage={setMessage}
-                setSignedIn={setSignedIn}
-              />
+            {message !== '' ? (
+              <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
             ) : null}
             <Search
               pdfItems={pdfItems}
@@ -326,10 +306,7 @@ function App() {
             />
           </Fragment>
         )}
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={isLoading}
-        >
+        <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress size={100} color="primary" />
         </Backdrop>
       </Fragment>

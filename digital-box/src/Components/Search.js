@@ -1,43 +1,37 @@
-import Input from "@mui/material/Input";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import { Fragment, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import SendIcon from "@mui/icons-material/Send";
-import { Box, IconButton, Tooltip } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import FilterModal from "./FilterModal";
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import { Fragment, useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import SendIcon from '@mui/icons-material/Send';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterModal from './FilterModal';
 
-const Search = ({
-  setIsLoading,
-  pdfItems,
-  handleSearch,
-  renderSelected,
-  tabValue,
-}) => {
-  const [searchText, setSearchText] = useState("");
+const Search = ({ setIsLoading, pdfItems, handleSearch, renderSelected, tabValue }) => {
+  const [searchText, setSearchText] = useState('');
   const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [textSearchTypeFilter, setTextSearchTypeFilter] = useState("orders");
-  const [marketplaceFilter, setMarketplaceFilter] = useState("all");
+  const [textSearchTypeFilter, setTextSearchTypeFilter] = useState('orders');
+  const [marketplaceFilter, setMarketplaceFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState(false);
 
   useEffect(() => {
-    setSearchText("");
+    setSearchText('');
     handleSearch(searchText, {
       textSearchTypeFilter: textSearchTypeFilter,
       marketplaceFilter: marketplaceFilter,
-      priorityFilter: priorityFilter,
+      priorityFilter: priorityFilter
     });
   }, []);
 
-  const handleSearchClick = (e) => {
+  const handleSearchClick = e => {
     e.preventDefault();
     setIsLoading(true);
     handleSearch(searchText, {
       textSearchTypeFilter: textSearchTypeFilter,
       marketplaceFilter: marketplaceFilter,
-      priorityFilter: priorityFilter,
+      priorityFilter: priorityFilter
     });
   };
 
@@ -60,47 +54,45 @@ const Search = ({
                 <SearchIcon />
               </InputAdornment>
             }
-            sx={{ width: "50%", pt: "2%" }}
-            onChange={(e) => setSearchText(e.target.value)}
+            sx={{ width: '50%', pt: '2%' }}
+            onChange={e => setSearchText(e.target.value)}
           />
           <Button
             type="submit"
             variant="contained"
             sx={{
-              ml: "1vh",
-              mr: "1vh",
-              fontWeight: "bold",
-              bgcolor: "black",
-              "& .MuiButton-root": { minWidth: 25 },
+              ml: '1vh',
+              mr: '1vh',
+              fontWeight: 'bold',
+              bgcolor: 'black',
+              '& .MuiButton-root': { minWidth: 25 }
             }}
-          >            
+          >
             <SendIcon fontSize="small" />
           </Button>
-          {
-            !tabValue ? (
-              <Tooltip title="Search Filters" placement="top">
-                <IconButton onClick={handleFilterOpen} sx={{ color: "#4188f2" }}>
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-            ) : null
-          }
+          {!tabValue ? (
+            <Tooltip title="Search Filters" placement="top">
+              <IconButton onClick={handleFilterOpen} sx={{ color: '#4188f2' }}>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          ) : null}
         </form>
       </Box>
       <Stack
         direction="row"
         spacing={2}
-        sx={{ pt: "1%", display: "flex", pb: "1%" }}
+        sx={{ pt: '1%', display: 'flex', pb: '1%' }}
         alignItems="center"
         justifyContent="center"
       >
         {renderSelected ? (
-          <Box component="span" sx={{ fontSize: 24, color: "black" }}>
-            {pdfItems.filter((item) => item.Checked !== false).length} Order(s)
-            Selected | {pdfItems.length} Order(s) Total
+          <Box component="span" sx={{ fontSize: 24, color: 'black' }}>
+            {pdfItems.filter(item => item.Checked !== false).length} Order(s) Selected |{' '}
+            {pdfItems.length} Order(s) Total
           </Box>
         ) : (
-          <Box component="span" sx={{ fontSize: 24, color: "black" }}>
+          <Box component="span" sx={{ fontSize: 24, color: 'black' }}>
             {pdfItems.length} {tabValue} Order(s)
           </Box>
         )}

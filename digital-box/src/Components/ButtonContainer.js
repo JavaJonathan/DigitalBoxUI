@@ -1,38 +1,38 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Fab from "@mui/material/Fab";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CancelScheduleSendIcon from "@mui/icons-material/CancelScheduleSend";
-import * as HttpHelper from "./HttpHelper";
-import Tooltip from "@mui/material/Tooltip";
-import { useState } from "react";
-import ShipOrdersModal from "./ShipModal";
-import CancelOrdersModal from "./CancelModal";
-import SyncDatabaseModal from "./SyncDatabaseModal";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
+import * as HttpHelper from './HttpHelper';
+import Tooltip from '@mui/material/Tooltip';
+import { useState } from 'react';
+import ShipOrdersModal from './ShipModal';
+import CancelOrdersModal from './CancelModal';
+import SyncDatabaseModal from './SyncDatabaseModal';
 
 export default function ButtonContainer(props) {
-  const [cancelOrderModalOpen, setCancelOrderModalOpen] = useState(false)
-  const [shipOrderModalOpen, setShipOrderModalOpen] = useState(false)
-  const [syncDatabaseModalOpen, setSyncDatabaseModalOpen] = useState(false)
-  const orders = props.pdfItems.filter((item) => item.Checked !== false);
-  const disabled = orders.length < 1
+  const [cancelOrderModalOpen, setCancelOrderModalOpen] = useState(false);
+  const [shipOrderModalOpen, setShipOrderModalOpen] = useState(false);
+  const [syncDatabaseModalOpen, setSyncDatabaseModalOpen] = useState(false);
+  const orders = props.pdfItems.filter(item => item.Checked !== false);
+  const disabled = orders.length < 1;
 
-  const handleCancelClick = async () => {    
+  const handleCancelClick = async () => {
     if (orders.length < 1) return;
-    setCancelOrderModalOpen(true)
+    setCancelOrderModalOpen(true);
   };
 
   const handleCancelClose = async () => {
-    setCancelOrderModalOpen(false)
+    setCancelOrderModalOpen(false);
   };
 
   const handleCancelOrders = async () => {
-    setCancelOrderModalOpen(false)
+    setCancelOrderModalOpen(false);
 
     let cancelledIds = [];
-    orders.forEach((order) => {
+    orders.forEach(order => {
       cancelledIds.push(order.FileId);
     });
     await HttpHelper.cancelOrders(
@@ -43,24 +43,22 @@ export default function ButtonContainer(props) {
     );
   };
 
-  const handleShipClick = async () => {    
-    setShipOrderModalOpen(true)
+  const handleShipClick = async () => {
+    setShipOrderModalOpen(true);
   };
 
   const handleShipClose = async () => {
-    setShipOrderModalOpen(false)
+    setShipOrderModalOpen(false);
   };
 
   const handleShipOrders = async () => {
-    setShipOrderModalOpen(false)
+    setShipOrderModalOpen(false);
 
     let shippedIds = [];
-    orders.forEach((order) => {
+    orders.forEach(order => {
       shippedIds.push(order.FileId);
     });
-    props.setMessage(
-      "Shipping... please wait a moment while we download your requested orders."
-    );
+    props.setMessage('Shipping... please wait a moment while we download your requested orders.');
     await HttpHelper.shipOrders(
       props.setPdfItems,
       props.setMessage,
@@ -75,7 +73,7 @@ export default function ButtonContainer(props) {
     });
     let orders = [];
 
-    if (pagedItems.every((pagedItem) => pagedItem.Checked)) {
+    if (pagedItems.every(pagedItem => pagedItem.Checked)) {
       orders = props.pdfItems.map((item, index) => {
         if (index > props.page * 25 - 1 || index < props.page * 25 - 25) {
           return item;
@@ -96,33 +94,29 @@ export default function ButtonContainer(props) {
   };
 
   const handleSyncDatabaseClick = () => {
-    setSyncDatabaseModalOpen(true)
+    setSyncDatabaseModalOpen(true);
   };
 
   const handleSyncDatabaseClose = () => {
-    setSyncDatabaseModalOpen(false)
+    setSyncDatabaseModalOpen(false);
   };
 
   const handleSyncDatabase = () => {
-    setSyncDatabaseModalOpen(false)
+    setSyncDatabaseModalOpen(false);
     props.handleSyncDatabase();
   };
 
   return (
-    <Box
-      sx={{ "& > :not(style)": { m: 1 } }}
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Box sx={{ '& > :not(style)': { m: 1 } }} alignItems="center" justifyContent="center">
       <Tooltip title="Select All" placement="top">
         <Fab
           sx={{
-            bgcolor: "black",
-            fontWeight: "bold",
-            color: "white",
-            "&:hover": {
-              bgcolor: "#4188f2",
-            },
+            bgcolor: 'black',
+            fontWeight: 'bold',
+            color: 'white',
+            '&:hover': {
+              bgcolor: '#4188f2'
+            }
           }}
           onClick={handleSelectAll}
         >
@@ -132,14 +126,14 @@ export default function ButtonContainer(props) {
       <Tooltip title="Ship" placement="top">
         <Fab
           sx={{
-            bgcolor: "green",
-            fontWeight: "bold",
-            color: "white",
-            "&:hover": {
-              bgcolor: "black",
+            bgcolor: 'green',
+            fontWeight: 'bold',
+            color: 'white',
+            '&:hover': {
+              bgcolor: 'black'
             },
-            "&:disabled": {
-              bgcolor: "#87f3be",
+            '&:disabled': {
+              bgcolor: '#87f3be'
             }
           }}
           onClick={handleShipClick}
@@ -151,14 +145,14 @@ export default function ButtonContainer(props) {
       <Tooltip title="Cancel" placement="top">
         <Fab
           sx={{
-            bgcolor: "red",
-            fontWeight: "bold",
-            color: "white",
-            "&:hover": {
-              bgcolor: "black",
+            bgcolor: 'red',
+            fontWeight: 'bold',
+            color: 'white',
+            '&:hover': {
+              bgcolor: 'black'
             },
-            "&:disabled": {
-              bgcolor: "#db5858",
+            '&:disabled': {
+              bgcolor: '#db5858'
             }
           }}
           onClick={handleCancelClick}
@@ -170,33 +164,33 @@ export default function ButtonContainer(props) {
       <Tooltip title="Sync Database" placement="top">
         <Fab
           sx={{
-            bgcolor: "black",
-            fontWeight: "bold",
-            color: "white",
-            "&:hover": {
-              bgcolor: "#4188f2",
-            },
+            bgcolor: 'black',
+            fontWeight: 'bold',
+            color: 'white',
+            '&:hover': {
+              bgcolor: '#4188f2'
+            }
           }}
           onClick={handleSyncDatabaseClick}
         >
           <RefreshIcon />
         </Fab>
       </Tooltip>
-      <ShipOrdersModal 
-        open={shipOrderModalOpen} 
+      <ShipOrdersModal
+        open={shipOrderModalOpen}
         handleClick={handleShipOrders}
         handleClose={handleShipClose}
         shippedOrderCount={orders.length}
       />
-      <CancelOrdersModal 
-        open={cancelOrderModalOpen} 
+      <CancelOrdersModal
+        open={cancelOrderModalOpen}
         handleClick={handleCancelOrders}
         handleClose={handleCancelClose}
         cancelledOrderCount={orders.length}
       />
-      <SyncDatabaseModal 
-        open={syncDatabaseModalOpen} 
-        handleClick={handleSyncDatabase} 
+      <SyncDatabaseModal
+        open={syncDatabaseModalOpen}
+        handleClick={handleSyncDatabase}
         handleClose={handleSyncDatabaseClose}
       />
     </Box>

@@ -1,23 +1,17 @@
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { useEffect } from "react";
-import { Typography } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import { useEffect } from 'react';
+import { Typography } from '@mui/material';
 
-const NoteModal = ({
-  open,
-  handleClose,
-  note,
-  handleAddNote,
-  selectedFileId,
-}) => {
+const NoteModal = ({ open, handleClose, note, handleAddNote, selectedFileId }) => {
   const [editMode, setEditMode] = useState(false);
-  const [localNoteState, setLocalNoteState] = useState(note || "");
+  const [localNoteState, setLocalNoteState] = useState(note || '');
 
   useEffect(() => {
     setLocalNoteState(note);
@@ -29,7 +23,7 @@ const NoteModal = ({
 
   const handleEditClose = () => {
     setEditMode(false);
-    setLocalNoteState(note || "");
+    setLocalNoteState(note || '');
     handleClose();
   };
 
@@ -39,23 +33,23 @@ const NoteModal = ({
     setEditMode(false);
   };
 
-  const handleNoteChange = (event) => {
+  const handleNoteChange = event => {
     setLocalNoteState(event.target.value);
   };
 
   if (editMode) {
     return (
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>{"Order Notes"}</DialogTitle>
+        <DialogTitle>{'Order Notes 📝'}</DialogTitle>
         <DialogContent>
           <TextField
-            label="Add/Edit Note"
+            label="Add/Edit Note 📝"
             variant="outlined"
             fullWidth
             inputProps={{ maxLength: 50 }}
             value={localNoteState}
             onChange={handleNoteChange}
-            style={{ marginTop: "5px" }}
+            style={{ marginTop: '5px' }}
           />
         </DialogContent>
         <DialogActions>
@@ -72,7 +66,7 @@ const NoteModal = ({
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>{"Order Notes"}</DialogTitle>
+      <DialogTitle>{'Order Notes 🗒️'}</DialogTitle>
       <DialogContent>
         <Typography>{note ? note : '(empty)'}</Typography>
       </DialogContent>
@@ -81,7 +75,7 @@ const NoteModal = ({
           Close
         </Button>
         <Button variant="text" onClick={handleEditClick}>
-          {note ? "Edit" : "Add"}
+          {note ? 'Edit' : 'Add'}
         </Button>
       </DialogActions>
     </Dialog>
