@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,15 +7,22 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import CheckIcon from "@mui/icons-material/Check";
-import ToggleButton from "@mui/material/ToggleButton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import IconButton from "@mui/material/IconButton";
 import Switch from "@mui/material/Switch";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { grey } from "@mui/material/colors";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyBoardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Box } from "@mui/material";
 
 const ContentTable = (props) => {
+  const theme = createTheme({
+    palette: {
+      primary: grey,
+    },
+  });
+
   const [pageCount, setPageCount] = useState(1);
 
   const handleSelected = (event) => {
@@ -44,10 +51,6 @@ const ContentTable = (props) => {
     props.setPdfItems([...newPdfItems]);
   }, [props.page]);
 
-  useEffect(() => {
-    props.setPage(1);
-  }, [props.searchCount]);
-
   const getAmountOfPages = () => {
     let pages = 0;
     if (props.pdfItems.length % 25 > 0) {
@@ -58,8 +61,28 @@ const ContentTable = (props) => {
     setPageCount(Math.floor(pages));
   };
 
+  const getColumnName = () => {
+    if (props.tabValue === undefined) {
+      return "Ship Date";
+    } else if (props.tabValue === 0) {
+      return "Shipped On";
+    } else {
+      return "Cancelled On";
+    }
+  };
+
+  const getDateColumnValue = (order, orderItem) => {
+    if (props.tabValue === undefined) {
+      return orderItem.ShipDate;
+    } else if (props.tabValue === 0) {
+      return order.shippedOn;
+    } else {
+      return order.canceledOn;
+    }
+  };
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <TableContainer
         component={Paper}
         sx={{
@@ -73,35 +96,51 @@ const ContentTable = (props) => {
         }}
       >
         <Table sx={{ whiteSpace: "normal", borderColor: "grey" }}>
-          <TableHead sx={{ bgcolor: "black" }}>
+          <TableHead
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)",
+            }}
+          >
             <TableRow sx={{ border: 2, whiteSpace: "normal" }}>
               <TableCell
-                sx={{ border: 2, borderColor: "black" }}
+                sx={{ border: 2 }}
                 style={{ color: "white", fontFamily: "Alfa Slab One" }}
                 className="cell"
               >
                 Order Number
               </TableCell>
               <TableCell
-                sx={{ border: 2, borderColor: "black" }}
-                align="center"
+                sx={{ border: 2, cursor: "pointer" }}
                 style={{ color: "white", fontFamily: "Alfa Slab One" }}
+                align="center"
+                onClick={() => props.handleSortClick(props.tabValue)}
               >
                 Title
+                <Box
+                  component="span"
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  {props.sortedByTitle ? (
+                    <KeyBoardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </Box>
               </TableCell>
               <TableCell
-                sx={{ border: 2, borderColor: "black" }}
+                sx={{ border: 2 }}
                 align="center"
                 style={{ color: "white", fontFamily: "Alfa Slab One" }}
               >
                 Quantity
               </TableCell>
               <TableCell
-                sx={{ border: 2, borderColor: "black" }}
+                sx={{ border: 2 }}
                 align="center"
                 style={{ color: "white", fontFamily: "Alfa Slab One" }}
               >
-                Ship Date
+                {getColumnName()}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -115,37 +154,43 @@ const ContentTable = (props) => {
                         <TableCell
                           align="center"
                           rowSpan={row.FileContents.length}
-                          style={{ padding: "15px", "font-weight": "bold" }}
+                          style={{
+                            padding: "15px",
+                            fontWeight: "bold",
+                            borderColor: "#4588f2",
+                          }}
                           sx={{
                             bgcolor: row.Checked ? "#c7f7d4" : "",
-                            borderColor: "darkgray",
                             pl: "1vh",
+                            border: 1,
                           }}
                         >
                           <div
                             style={{
-                              "padding-bottom": "2vh",
-                              "font-size": "15px",
+                              pb: "2vh",
+                              fontSize: "15px",
                             }}
                           >
-                            <Switch
-                              value={row.FileId}
-                              checked={row.Checked}
-                              onClick={handleSelected}
-                              color="success"
-                            ></Switch>
+                            {props.renderSwitch ? (
+                              <Switch
+                                value={row.FileId}
+                                checked={row.Checked}
+                                onClick={handleSelected}
+                                color="success"
+                              ></Switch>
+                            ) : null}
                           </div>
                           {row.FileContents[0].OrderNumber}
                         </TableCell>
                       ) : null}
                       <TableCell
                         style={{
-                          "word-break": "break-word",
-                          "background-color": "#f5f1f1",
+                          wordBreak: "break-word",
                           borderColor: "darkgray",
                         }}
                         sx={{
                           p: "1vh",
+                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
                         }}
                       >
                         <span style={{ fontWeight: "bold" }}>
@@ -155,7 +200,10 @@ const ContentTable = (props) => {
                       </TableCell>
                       <TableCell
                         align="center"
-                        sx={{ borderColor: "darkgray" }}
+                        sx={{
+                          borderColor: "darkgray",
+                          bgcolor: row.Checked ? "#c7f7d4" : "",
+                        }}
                       >
                         {item.Quantity}
                       </TableCell>
@@ -163,10 +211,10 @@ const ContentTable = (props) => {
                         align="center"
                         sx={{
                           borderColor: "darkgray",
-                          "background-color": "#f5f1f1",
+                          bgcolor: row.Checked ? "#c7f7d4" : "#f5f1f1",
                         }}
                       >
-                        {item.ShipDate}
+                        {getDateColumnValue(row, item)}
                       </TableCell>
                     </TableRow>
                   ))
@@ -180,9 +228,12 @@ const ContentTable = (props) => {
           size="large"
           page={props.page}
           onChange={handleChange}
+          color="primary"
+          variant="outlined"
+          sx={{ color: "white" }}
         />
       </Stack>
-    </>
+    </ThemeProvider>
   );
 };
 
