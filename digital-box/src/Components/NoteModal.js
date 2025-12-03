@@ -30,6 +30,7 @@ const NoteModal = ({ open, handleClose, note, handleAddNote, selectedFileId }) =
   const handleSaveClick = () => {
     handleAddNote(selectedFileId, localNoteState);
     handleClose();
+    setLocalNoteState('');
     setEditMode(false);
   };
 

@@ -198,7 +198,7 @@ export async function generateReport(
   let responseBody = '';
 
   formData.append(
-    'token',
+    'code',
     JSON.stringify({
       code: localStorage.getItem('DigitalBoxRefreshCode')
     })
