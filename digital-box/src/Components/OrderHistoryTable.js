@@ -21,6 +21,11 @@ const OrderHistoryTable = props => {
   const [undoShipModalOpen, setUndoShipModalOpen] = useState(false);
   const [undoCancelModalOpen, setUndoCancelModalOpen] = useState(false);
   const [currentFileId, setCurrentFileId] = useState('');
+  const [name, setName] = useState('');
+
+  const handleNameChange = (e) => {
+    setName(e.target.value)
+  }
 
   const handleUndoShipClick = fileId => {
     setCurrentFileId(fileId);
@@ -33,7 +38,7 @@ const OrderHistoryTable = props => {
 
   const handleUndoShip = () => {
     setUndoShipModalOpen(false);
-    props.handleUndoShip(currentFileId);
+    props.handleUndoShip(currentFileId, name);
   };
 
   const handleUndoCancelClick = fileId => {
@@ -47,7 +52,7 @@ const OrderHistoryTable = props => {
 
   const handleUndoCancel = () => {
     setUndoCancelModalOpen(false);
-    props.handleUndoCancel(currentFileId);
+    props.handleUndoCancel(currentFileId, name);
   };
 
   const handleUndoClick = row => {
@@ -258,11 +263,15 @@ const OrderHistoryTable = props => {
         open={undoShipModalOpen}
         handleClick={handleUndoShip}
         handleClose={handleUndoShipClose}
+        name={name}
+        handleChange={handleNameChange}
       />
       <UndoCancelledOrderModal
         open={undoCancelModalOpen}
         handleClick={handleUndoCancel}
         handleClose={handleUndoCancelClose}
+        name={name}
+        handleChange={handleNameChange}
       />
     </>
   );

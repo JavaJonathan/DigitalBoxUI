@@ -18,6 +18,7 @@ const Search = ({ setIsLoading, pdfItems, handleSearch, renderSelected, tabValue
 
   useEffect(() => {
     setSearchText('');
+    setIsLoading(true);
     handleSearch(searchText, {
       textSearchTypeFilter: textSearchTypeFilter,
       marketplaceFilter: marketplaceFilter,

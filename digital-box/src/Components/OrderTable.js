@@ -165,7 +165,7 @@ const OrderTable = props => {
                             borderColor: '#4588f2'
                           }}
                           sx={{
-                            bgcolor: row.Checked ? '#c7f7d4' : '',
+                            bgcolor: row.Checked ? '#e8f4fd' : '',
                             pl: '1vh',
                             border: 1
                           }}
@@ -181,7 +181,6 @@ const OrderTable = props => {
                                 value={row.FileId}
                                 checked={row.Checked}
                                 onClick={handleSelected}
-                                color="success"
                               ></Switch>
                             ) : null}
                           </div>
@@ -195,7 +194,7 @@ const OrderTable = props => {
                         }}
                         sx={{
                           p: '1vh',
-                          bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1'
+                          bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1'
                         }}
                       >
                         <span style={{ fontWeight: 'bold' }}>{`${++index}.`}&nbsp;</span>
@@ -205,7 +204,7 @@ const OrderTable = props => {
                         align="center"
                         sx={{
                           borderColor: 'darkgray',
-                          bgcolor: row.Checked ? '#c7f7d4' : ''
+                          bgcolor: row.Checked ? '#e8f4fd' : ''
                         }}
                       >
                         {item.Quantity}
@@ -214,7 +213,7 @@ const OrderTable = props => {
                         align="center"
                         sx={{
                           borderColor: 'darkgray',
-                          bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1'
+                          bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1'
                         }}
                       >
                         {item.ShipDate}
@@ -223,7 +222,7 @@ const OrderTable = props => {
                         <TableCell
                           align="center"
                           sx={{
-                            bgcolor: row.Checked ? '#c7f7d4' : '',
+                            bgcolor: row.Checked ? '#e8f4fd' : '',
                             border: '1px solid darkgray'
                           }}
                           rowSpan={row.FileContents.length}
@@ -241,7 +240,7 @@ const OrderTable = props => {
                           align="center"
                           sx={{
                             borderColor: 'darkgray',
-                            bgcolor: row.Checked ? '#c7f7d4' : '#f5f1f1',
+                            bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1',
                             borderLeft: 1
                           }}
                           rowSpan={row.FileContents.length}

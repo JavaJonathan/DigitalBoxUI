@@ -59,7 +59,7 @@ const FilterModal = ({
           <FormControl fullWidth>
             <InputLabel>Priority Orders</InputLabel>
             <Select value={priorityFilter} label="Priority Orders" onChange={handlePriorityChange}>
-              <MenuItem value={false}>All Orders 👍🏾</MenuItem>
+              <MenuItem value={false}>All Orders 👍🏼</MenuItem>
               <MenuItem value={true}>Priority Orders Only ⚡</MenuItem>
             </Select>
           </FormControl>

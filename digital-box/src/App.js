@@ -27,39 +27,43 @@ function App() {
   const [sortedByNote, setSortedByNote] = useState(false);
 
   useEffect(() => {
-    let token = localStorage.getItem('DigitalBoxToken');
-    if (token) {
-      setSignedIn(true);
-    }
+    let token = localStorage.getItem('DigitalBoxRefreshToken');
+    if (!token) setSignedIn(false)
+    else setSignedIn(true)
   }, []);
 
   useEffect(() => {
-    if (authToken !== '') localStorage.setItem('DigitalBoxToken', authToken);
+    if (authToken) localStorage.setItem('DigitalBoxRefreshToken', authToken);
   }, [authToken]);
 
   const login = useGoogleLogin({
+    flow: "auth-code",
+    redirect_uri: "http://localhost:3000",
     scope:
       'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.appfolder https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.resource https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.readonly.metadata https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly',
+      access_type: "offline",
+      prompt: "consent",
     onSuccess: tokenResponse => {
-      localStorage.setItem('DigitalBoxToken', `${tokenResponse.access_token}`);
+      localStorage.setItem('DigitalBoxRefreshCode', `${tokenResponse.code}`);
       setSignedIn(true);
     }
   });
 
-  const handleUndoCancel = async fileId => {
+  const handleUndoCancel = async (fileId, name) => {
     setIsLoading(true);
     await HttpHelper.undoCancelledOrder(
       setPdfItems,
       setMessage,
       fileId,
+      name,
       setIsLoading,
       setAuthToken
     );
   };
 
-  const handleUndoShip = async fileId => {
+  const handleUndoShip = async (fileId, name) => {
     setIsLoading(true);
-    await HttpHelper.undoShippedOrder(setPdfItems, setMessage, fileId, setIsLoading, setAuthToken);
+    await HttpHelper.undoShippedOrder(setPdfItems, setMessage, fileId, name, setIsLoading, setAuthToken);
   };
 
   const handleDownloadReportClick = () => {
@@ -187,6 +191,7 @@ function App() {
       });
       setPdfItems(localPdfItems);
       setSortedByTitle(true);
+      setSortedByNote(false);
     }
   };
 

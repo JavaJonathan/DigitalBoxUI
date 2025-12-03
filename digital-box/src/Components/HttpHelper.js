@@ -7,9 +7,7 @@ export async function cancelOrders(setPdfItems, setMessage, orders, setAuthToken
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       Orders: orders,
       Action: 'cancel'
     })
@@ -31,9 +29,7 @@ export async function shipOrders(setPdfItems, setMessage, orders, setAuthToken) 
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       Orders: orders,
       Action: 'ship'
     })
@@ -63,9 +59,7 @@ export async function searchOrders(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       searchValue: searchValue,
       filters: filters
     })
@@ -75,7 +69,8 @@ export async function searchOrders(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      console.log(responseBody.Token)
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -94,9 +89,7 @@ export async function searchShippedOrders(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       searchValue: searchValue
     })
   })
@@ -124,9 +117,7 @@ export async function searchCanceledOrders(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       searchValue: searchValue
     })
   })
@@ -154,9 +145,7 @@ export async function refreshOrders(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       Filter: searchValue
     })
   })
@@ -185,9 +174,7 @@ export async function togglePriority(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       priority: priority,
       FileId: fileId
     })
@@ -213,7 +200,7 @@ export async function generateReport(
   formData.append(
     'token',
     JSON.stringify({
-      access_token: localStorage.getItem('DigitalBoxToken')
+      code: localStorage.getItem('DigitalBoxRefreshCode')
     })
   );
 
@@ -246,9 +233,7 @@ export async function addNoteToOrder(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       note: note,
       FileId: fileId
     })
@@ -269,9 +254,7 @@ export async function downloadReport() {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      }
+      code: localStorage.getItem('DigitalBoxRefreshCode')
     })
   });
 
@@ -311,6 +294,7 @@ export async function undoCancelledOrder(
   setPdfItems,
   setMessage,
   fileId,
+  name,
   setIsLoading,
   setAuthToken
 ) {
@@ -322,10 +306,9 @@ export async function undoCancelledOrder(
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
-      FileId: fileId
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
+      FileId: fileId,
+      name: name
     })
   })
     .then(response => response.json().then(r => (responseBody = r)))
@@ -341,6 +324,7 @@ export async function undoShippedOrder(
   setPdfItems,
   setMessage,
   fileId,
+  name,
   setIsLoading,
   setAuthToken
 ) {
@@ -355,7 +339,8 @@ export async function undoShippedOrder(
       token: {
         access_token: localStorage.getItem('DigitalBoxToken')
       },
-      FileId: fileId
+      FileId: fileId,
+      name: name
     })
   })
     .then(response => response.json().then(r => (responseBody = r)))
