@@ -162,7 +162,9 @@ export async function togglePriority(
   setPdfItems,
   setMessage,
   fileId,
-  priority,
+  priority,  
+  searchValue,
+  filters,
   setIsLoading,
   setAuthToken
 ) {
@@ -176,7 +178,9 @@ export async function togglePriority(
     body: JSON.stringify({
       code: localStorage.getItem('DigitalBoxRefreshCode'),
       priority: priority,
-      FileId: fileId
+      FileId: fileId,      
+      searchValue: searchValue,
+      filters: filters
     })
   })
     .then(response => response.json().then(r => (responseBody = r)))
