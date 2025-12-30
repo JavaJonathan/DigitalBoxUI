@@ -66,7 +66,7 @@ const FilterModal = ({
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>Apply</Button>
       </DialogActions>
     </Dialog>
   );
