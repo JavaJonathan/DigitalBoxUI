@@ -47,9 +47,13 @@ const NoteModal = ({ open, handleClose, note, handleAddNote, selectedFileId }) =
             variant="outlined"
             fullWidth
             inputProps={{ maxLength: 50 }}
+            helperText={'Maximum 50 characters'}
             value={localNoteState}
             onChange={handleNoteChange}
             style={{ marginTop: '5px' }}
+            sx={{ "& .MuiFormHelperText-root": {
+              marginLeft: 0
+            } }}
           />
         </DialogContent>
         <DialogActions>
