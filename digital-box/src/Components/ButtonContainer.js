@@ -30,6 +30,7 @@ export default function ButtonContainer(props) {
 
   const handleCancelOrders = async () => {
     setCancelOrderModalOpen(false);
+    props.setIsLoading(true);
 
     let cancelledIds = [];
     orders.forEach(order => {
@@ -39,7 +40,8 @@ export default function ButtonContainer(props) {
       props.setPdfItems,
       props.setMessage,
       cancelledIds,
-      props.setAuthToken
+      props.setAuthToken,
+      props.setIsLoading
     );
   };
 
@@ -53,6 +55,7 @@ export default function ButtonContainer(props) {
 
   const handleShipOrders = async () => {
     setShipOrderModalOpen(false);
+    props.setIsLoading(true);
 
     let shippedIds = [];
     orders.forEach(order => {
@@ -63,7 +66,8 @@ export default function ButtonContainer(props) {
       props.setPdfItems,
       props.setMessage,
       shippedIds,
-      props.setAuthToken
+      props.setAuthToken,
+      props.setIsLoading
     );
   };
 

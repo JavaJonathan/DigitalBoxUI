@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import * as HttpHelper from './Components/HttpHelper';
 import NavBar from './Components/NavBar';
 import AlertUI from './Components/Alert';
@@ -15,7 +15,7 @@ import OrderTable from './Components/OrderTable';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 function App() {
-  //state defined in App.js is gloabl and passed via props, we could use this opportunity to implement the Redux pattern
+  //state defined in App.js is global and passed via props, we could use this opportunity to implement the Redux pattern
   const [pdfItems, setPdfItems] = useState([]);
   const [authToken, setAuthToken] = useState('');
   const [signedIn, setSignedIn] = useState(false);
@@ -32,8 +32,8 @@ function App() {
 
   useEffect(() => {
     let token = localStorage.getItem('DigitalBoxRefreshToken');
-    if (!token) setSignedIn(false)
-    else setSignedIn(true)
+    if (!token) setSignedIn(false);
+    else setSignedIn(true);
   }, []);
 
   useEffect(() => {
@@ -41,19 +41,19 @@ function App() {
   }, [authToken]);
 
   const login = useGoogleLogin({
-    flow: "auth-code",
-    redirect_uri: "http://localhost:3000",
+    flow: 'auth-code',
+    redirect_uri: 'http://localhost:3000',
     scope:
       'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.appfolder https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.resource https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.readonly.metadata https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly',
-      access_type: "offline",
-      prompt: "consent",
+    access_type: 'offline',
+    prompt: 'consent',
     onSuccess: tokenResponse => {
       localStorage.setItem('DigitalBoxRefreshCode', `${tokenResponse.code}`);
       setSignedIn(true);
     }
   });
 
-  const handleUndoCancel = async (fileId, name) => {
+  const handleUndoCancel = useCallback(async (fileId, name) => {
     setIsLoading(true);
     await HttpHelper.undoCancelledOrder(
       setPdfItems,
@@ -63,23 +63,23 @@ function App() {
       setIsLoading,
       setAuthToken
     );
-  };
+  }, []);
 
-  const handleUndoShip = async (fileId, name) => {
+  const handleUndoShip = useCallback(async (fileId, name) => {
     setIsLoading(true);
     await HttpHelper.undoShippedOrder(setPdfItems, setMessage, fileId, name, setIsLoading, setAuthToken);
-  };
+  }, []);
 
-  const handleDownloadReportClick = () => {
+  const handleDownloadReportClick = useCallback(() => {
     HttpHelper.downloadReport();
-  };
+  }, []);
 
-  const handleAddNote = (fileId, note) => {
+  const handleAddNote = useCallback((fileId, note) => {
     setIsLoading(true);
     HttpHelper.addNoteToOrder(setPdfItems, setMessage, fileId, note, setIsLoading, setAuthToken);
-  };
+  }, []);
 
-  const handleTogglePriority = (fileId, priority) => {
+  const handleTogglePriority = useCallback((fileId, priority) => {
     setIsLoading(true);
     HttpHelper.togglePriority(
       setPdfItems,
@@ -91,11 +91,11 @@ function App() {
       setIsLoading,
       setAuthToken
     );
-  };
+  }, [searchValue, filters]);
 
-  const handleSearch = (searchValue, filters) => {
-    setSearchValue(searchValue)
-    setFilters(filters)
+  const handleSearch = useCallback((searchValue, filters) => {
+    setSearchValue(searchValue);
+    setFilters(filters);
     HttpHelper.searchOrders(
       setPdfItems,
       setMessage,
@@ -107,9 +107,9 @@ function App() {
     setPage(1);
     setSortedByTitle(false);
     setSortedByNote(false);
-  };
+  }, []);
 
-  const handleCanceledSearch = searchValue => {
+  const handleCanceledSearch = useCallback(searchValue => {
     HttpHelper.searchCanceledOrders(
       setPdfItems,
       setMessage,
@@ -118,9 +118,9 @@ function App() {
       setAuthToken
     );
     setPage(1);
-  };
+  }, []);
 
-  const handleShippedSearch = searchValue => {
+  const handleShippedSearch = useCallback(searchValue => {
     HttpHelper.searchShippedOrders(
       setPdfItems,
       setMessage,
@@ -129,17 +129,17 @@ function App() {
       setAuthToken
     );
     setPage(1);
-  };
+  }, []);
 
-  const handleSyncDatabase = () => {
+  const handleSyncDatabase = useCallback(() => {
     HttpHelper.refreshOrders(setPdfItems, setMessage, '', setIsLoading, setAuthToken);
-  };
+  }, []);
 
-  const handleGenerateReport = formData => {
+  const handleGenerateReport = useCallback(formData => {
     HttpHelper.generateReport(setPdfItems, setMessage, setIsLoading, setAuthToken, formData);
-  };
+  }, []);
 
-  const handleNoteSortClick = () => {
+  const handleNoteSortClick = useCallback(() => {
     let localPdfItems = pdfItems.map(item => {
       return { ...item, Checked: false };
     });
@@ -157,9 +157,9 @@ function App() {
       });
     }
     setPdfItems(localPdfItems);
-  };
+  }, [pdfItems, sortedByNote]);
 
-  const handleTitleSortClick = tabValue => {
+  const handleTitleSortClick = useCallback(tabValue => {
     let localPdfItems = pdfItems.map(item => {
       return { ...item, Checked: false };
     });
@@ -177,7 +177,6 @@ function App() {
         if (a.FileContents[0].ShipDate === '') {
           return Date.parse(a.FileContents[1].ShipDate) - Date.parse(b.FileContents[0].ShipDate);
         }
-
         return Date.parse(a.FileContents[0].ShipDate) - Date.parse(b.FileContents[0].ShipDate);
       });
       setPdfItems(localPdfItems);
@@ -185,12 +184,8 @@ function App() {
     } else {
       localPdfItems.sort((a, b) => {
         //put empty strings at the end of the list
-        if (a.FileContents[0].ShipDate === '') {
-          return 1;
-        }
-        if (b.FileContents[0].ShipDate === '') {
-          return -1;
-        }
+        if (a.FileContents[0].ShipDate === '') return 1;
+        if (b.FileContents[0].ShipDate === '') return -1;
 
         return (
           a.FileContents[0].Title.localeCompare(b.FileContents[0].Title) ||
@@ -201,18 +196,12 @@ function App() {
       setSortedByTitle(true);
       setSortedByNote(false);
     }
-  };
+  }, [pdfItems, sortedByTitle]);
 
-  if (!signedIn) {
-    return (
-      <div className="App">
-        <GlobalStyles
-          styles={{
-            body: {
-              fontFamily: 'Alfa Slab One'
-            }
-          }}
-        />
+  return (
+    <div className="App">
+      <GlobalStyles styles={{ body: { fontFamily: 'Alfa Slab One' } }} />
+      {!signedIn ? (
         <div
           style={{
             display: 'flex',
@@ -239,90 +228,80 @@ function App() {
             Sign In With Google
           </Button>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="App">
-      <GlobalStyles
-        styles={{
-          body: {
-            'font-family': 'Alfa Slab One'
-          }
-        }}
-      />
-      <Fragment>
-        <NavBar
-          setIsLoading={setIsLoading}
-          setOrderHistory={setOrderHistory}
-          orderHistory={orderHistory}
-          setPdfItems={setPdfItems}
-          setSortedByTitle={setSortedByTitle}
-          handleGenerateReport={handleGenerateReport}
-          handleDownloadReportClick={handleDownloadReportClick}
-        />
-        {orderHistory ? (
-          <Fragment>
-            {message !== '' ? (
-              <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
-            ) : null}
-            <OrderHistory
-              pdfItems={pdfItems}
-              setPdfItems={setPdfItems}
-              page={page}
-              setPage={setPage}
-              handleSortClick={handleTitleSortClick}
-              setIsLoading={setIsLoading}
-              isLoading={isLoading}
-              handleCanceledSearch={handleCanceledSearch}
-              handleShippedSearch={handleShippedSearch}
-              sortedByTitle={sortedByTitle}
-              setSortedByTitle={setSortedByTitle}
-              handleUndoCancel={handleUndoCancel}
-              handleUndoShip={handleUndoShip}
-            />
-          </Fragment>
-        ) : (
-          <Fragment>
-            {message !== '' ? (
-              <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
-            ) : null}
-            <Search
-              pdfItems={pdfItems}
-              handleSearch={handleSearch}
-              setIsLoading={setIsLoading}
-              isLoading={isLoading}
-              renderSelected={true}
-            />
-            <ButtonContainer
-              page={page}
-              pdfItems={pdfItems}
-              setAuthToken={setAuthToken}
-              setMessage={setMessage}
-              setPdfItems={setPdfItems}
-              handleSyncDatabase={handleSyncDatabase}
-            />
-            <OrderTable
-              pdfItems={pdfItems}
-              setPdfItems={setPdfItems}
-              page={page}
-              setPage={setPage}
-              handleSortClick={handleTitleSortClick}
-              renderSwitch={true}
-              sortedByTitle={sortedByTitle}
-              handleTogglePriority={handleTogglePriority}
-              isLoading={isLoading}
-              handleAddNote={handleAddNote}
-              handleNoteSortClick={handleNoteSortClick}
-              sortedByNote={sortedByNote}
-            />
-          </Fragment>
-        )}
-        <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={isLoading}>
-          <CircularProgress size={100} color="primary" />
-        </Backdrop>
-      </Fragment>
+      ) : (
+        <Fragment>
+          <NavBar
+            setIsLoading={setIsLoading}
+            setOrderHistory={setOrderHistory}
+            orderHistory={orderHistory}
+            setPdfItems={setPdfItems}
+            setSortedByTitle={setSortedByTitle}
+            handleGenerateReport={handleGenerateReport}
+            handleDownloadReportClick={handleDownloadReportClick}
+          />
+          {orderHistory ? (
+            <Fragment>
+              {message !== '' ? (
+                <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
+              ) : null}
+              <OrderHistory
+                pdfItems={pdfItems}
+                setPdfItems={setPdfItems}
+                page={page}
+                setPage={setPage}
+                handleSortClick={handleTitleSortClick}
+                setIsLoading={setIsLoading}
+                isLoading={isLoading}
+                handleCanceledSearch={handleCanceledSearch}
+                handleShippedSearch={handleShippedSearch}
+                sortedByTitle={sortedByTitle}
+                setSortedByTitle={setSortedByTitle}
+                handleUndoCancel={handleUndoCancel}
+                handleUndoShip={handleUndoShip}
+              />
+            </Fragment>
+          ) : (
+            <Fragment>
+              {message !== '' ? (
+                <AlertUI propMessage={message} setMessage={setMessage} setSignedIn={setSignedIn} />
+              ) : null}
+              <Search
+                pdfItems={pdfItems}
+                handleSearch={handleSearch}
+                setIsLoading={setIsLoading}
+                isLoading={isLoading}
+                renderSelected={true}
+              />
+              <ButtonContainer
+                page={page}
+                pdfItems={pdfItems}
+                setAuthToken={setAuthToken}
+                setMessage={setMessage}
+                setPdfItems={setPdfItems}
+                setIsLoading={setIsLoading}
+                handleSyncDatabase={handleSyncDatabase}
+              />
+              <OrderTable
+                pdfItems={pdfItems}
+                setPdfItems={setPdfItems}
+                page={page}
+                setPage={setPage}
+                handleSortClick={handleTitleSortClick}
+                renderSwitch={true}
+                sortedByTitle={sortedByTitle}
+                handleTogglePriority={handleTogglePriority}
+                isLoading={isLoading}
+                handleAddNote={handleAddNote}
+                handleNoteSortClick={handleNoteSortClick}
+                sortedByNote={sortedByNote}
+              />
+            </Fragment>
+          )}
+          <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={isLoading}>
+            <CircularProgress size={100} color="primary" />
+          </Backdrop>
+        </Fragment>
+      )}
     </div>
   );
 }

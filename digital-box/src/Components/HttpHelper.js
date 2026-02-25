@@ -1,7 +1,9 @@
-export async function cancelOrders(setPdfItems, setMessage, orders, setAuthToken) {
+const API_URL = 'http://localhost:2020';
+
+export async function cancelOrders(setPdfItems, setMessage, orders, setAuthToken, setIsLoading) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/cancel', {
+  await fetch(`${API_URL}/cancel`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -16,14 +18,15 @@ export async function cancelOrders(setPdfItems, setMessage, orders, setAuthToken
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
+      setIsLoading(false);
     });
 }
 
-export async function shipOrders(setPdfItems, setMessage, orders, setAuthToken) {
+export async function shipOrders(setPdfItems, setMessage, orders, setAuthToken, setIsLoading) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/ship', {
+  await fetch(`${API_URL}/ship`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -38,6 +41,8 @@ export async function shipOrders(setPdfItems, setMessage, orders, setAuthToken) 
     .then(() => {
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
+      setAuthToken(responseBody.Token);
+      setIsLoading(false);
     });
 }
 
@@ -51,9 +56,7 @@ export async function searchOrders(
 ) {
   let responseBody = '';
 
-  console.log(filters);
-
-  await fetch('http://localhost:2020/search', {
+  await fetch(`${API_URL}/search`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -69,7 +72,6 @@ export async function searchOrders(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      console.log(responseBody.Token)
       setAuthToken(responseBody.Token);
     });
 }
@@ -83,7 +85,7 @@ export async function searchShippedOrders(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/shippedOrders', {
+  await fetch(`${API_URL}/shippedOrders`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -98,7 +100,7 @@ export async function searchShippedOrders(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -111,7 +113,7 @@ export async function searchCanceledOrders(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/canceledOrders', {
+  await fetch(`${API_URL}/canceledOrders`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -126,7 +128,7 @@ export async function searchCanceledOrders(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -139,7 +141,7 @@ export async function refreshOrders(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/', {
+  await fetch(`${API_URL}/`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -154,7 +156,7 @@ export async function refreshOrders(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -162,7 +164,7 @@ export async function togglePriority(
   setPdfItems,
   setMessage,
   fileId,
-  priority,  
+  priority,
   searchValue,
   filters,
   setIsLoading,
@@ -170,7 +172,7 @@ export async function togglePriority(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/priority', {
+  await fetch(`${API_URL}/priority`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -178,7 +180,7 @@ export async function togglePriority(
     body: JSON.stringify({
       code: localStorage.getItem('DigitalBoxRefreshCode'),
       priority: priority,
-      FileId: fileId,      
+      FileId: fileId,
       searchValue: searchValue,
       filters: filters
     })
@@ -188,7 +190,7 @@ export async function togglePriority(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -208,7 +210,7 @@ export async function generateReport(
     })
   );
 
-  await fetch('http://localhost:2020/generateReport', {
+  await fetch(`${API_URL}/generateReport`, {
     method: 'POST',
     body: formData
   })
@@ -217,7 +219,7 @@ export async function generateReport(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -231,7 +233,7 @@ export async function addNoteToOrder(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/addNote', {
+  await fetch(`${API_URL}/addNote`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -247,12 +249,12 @@ export async function addNoteToOrder(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
 export async function downloadReport() {
-  const response = await fetch('http://localhost:2020/downloadReport', {
+  const response = await fetch(`${API_URL}/downloadReport`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -285,7 +287,7 @@ export async function downloadReport() {
 export async function getReportStatus(setReportStatus) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/reportStatus', {
+  await fetch(`${API_URL}/reportStatus`, {
     method: 'GET'
   })
     .then(response => response.json().then(r => (responseBody = r)))
@@ -304,7 +306,7 @@ export async function undoCancelledOrder(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/undoCancel', {
+  await fetch(`${API_URL}/undoCancel`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
@@ -320,7 +322,7 @@ export async function undoCancelledOrder(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }
 
@@ -334,15 +336,13 @@ export async function undoShippedOrder(
 ) {
   let responseBody = '';
 
-  await fetch('http://localhost:2020/undoShip', {
+  await fetch(`${API_URL}/undoShip`, {
     method: 'POST',
     headers: {
       'content-type': 'text/plain'
     },
     body: JSON.stringify({
-      token: {
-        access_token: localStorage.getItem('DigitalBoxToken')
-      },
+      code: localStorage.getItem('DigitalBoxRefreshCode'),
       FileId: fileId,
       name: name
     })
@@ -352,6 +352,6 @@ export async function undoShippedOrder(
       setMessage(responseBody.Message);
       setPdfItems(responseBody.Orders);
       setIsLoading(false);
-      setAuthToken(responseBody.Token.token);
+      setAuthToken(responseBody.Token);
     });
 }

@@ -19,13 +19,13 @@ import NoteIcon from '@mui/icons-material/Note';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import NoteModal from './NoteModal';
 
-const OrderTable = props => {
-  const theme = createTheme({
-    palette: {
-      primary: { main: '#4188f2' }
-    }
-  });
+const theme = createTheme({
+  palette: {
+    primary: { main: '#4188f2' }
+  }
+});
 
+const OrderTable = props => {
   const [pageCount, setPageCount] = useState(1);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [selectedFileId, setSelectedFileId] = useState(false);
@@ -38,6 +38,7 @@ const OrderTable = props => {
   };
 
   const handleChange = (event, value) => {
+    props.setPdfItems(props.pdfItems.map(item => ({ ...item, Checked: false })));
     props.setPage(value);
   };
 
@@ -52,28 +53,9 @@ const OrderTable = props => {
   };
 
   useEffect(() => {
-    getAmountOfPages();
+    const pages = Math.ceil(props.pdfItems.length / 25);
+    setPageCount(pages);
   }, [props.pdfItems]);
-
-  useEffect(() => {
-    let newPdfItems = props.pdfItems.map(item => {
-      return {
-        ...item,
-        Checked: false
-      };
-    });
-    props.setPdfItems([...newPdfItems]);
-  }, [props.page]);
-
-  const getAmountOfPages = () => {
-    let pages = 0;
-    if (props.pdfItems.length % 25 > 0) {
-      pages = props.pdfItems.length / 25 + 1;
-    } else {
-      pages = props.pdfItems.length / 25;
-    }
-    setPageCount(Math.floor(pages));
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -154,7 +136,7 @@ const OrderTable = props => {
               index > props.page * 25 - 1 || index < props.page * 25 - 25
                 ? null
                 : row.FileContents.map((item, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={`${row.FileId}-${index}`}>
                       {index === 0 ? (
                         <TableCell
                           align="center"
@@ -197,7 +179,7 @@ const OrderTable = props => {
                           bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1'
                         }}
                       >
-                        <span style={{ fontWeight: 'bold' }}>{`${++index}.`}&nbsp;</span>
+                        <span style={{ fontWeight: 'bold' }}>{`${index + 1}.`}&nbsp;</span>
                         {`${item.Title}`}
                       </TableCell>
                       <TableCell
@@ -218,7 +200,7 @@ const OrderTable = props => {
                       >
                         {item.ShipDate}
                       </TableCell>
-                      {index === 1 ? (
+                      {index === 0 ? (
                         <TableCell
                           align="center"
                           sx={{
@@ -235,7 +217,7 @@ const OrderTable = props => {
                           />
                         </TableCell>
                       ) : null}
-                      {index === 1 ? (
+                      {index === 0 ? (
                         <TableCell
                           align="center"
                           sx={{
