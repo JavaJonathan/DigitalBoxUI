@@ -52,8 +52,11 @@ const AlertUI = props => {
       style={{
         position: 'fixed',
         zIndex: 99999,
-        marginTop: '3vh',
-        fontFamily: 'Alfa Slab One'
+        top: '3vh',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        maxWidth: '640px',
+        width: '90%'
       }}
       variant="filled"
     >

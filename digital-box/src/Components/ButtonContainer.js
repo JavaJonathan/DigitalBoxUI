@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
+import Button from '@mui/material/Button';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import * as HttpHelper from './HttpHelper';
-import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import ShipOrdersModal from './ShipModal';
 import CancelOrdersModal from './CancelModal';
@@ -111,75 +110,80 @@ export default function ButtonContainer(props) {
   };
 
   return (
-    <Box sx={{ '& > :not(style)': { m: 1 } }} alignItems="center" justifyContent="center">
-      <Tooltip title="Select All" placement="top">
-        <Fab
-          sx={{
-            bgcolor: 'black',
-            fontWeight: 'bold',
-            color: 'white',
-            '&:hover': {
-              bgcolor: '#4188f2'
-            }
-          }}
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mx: '3%',
+        my: 1.5,
+        gap: 1
+      }}
+    >
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Button
+          variant="outlined"
+          startIcon={<CheckBoxIcon />}
           onClick={handleSelectAll}
-        >
-          <CheckBoxIcon />
-        </Fab>
-      </Tooltip>
-      <Tooltip title="Ship" placement="top">
-        <Fab
           sx={{
-            bgcolor: 'green',
             fontWeight: 'bold',
-            color: 'white',
+            borderColor: '#374151',
+            color: '#374151',
             '&:hover': {
-              bgcolor: 'black'
-            },
-            '&:disabled': {
-              bgcolor: '#87f3be'
+              borderColor: '#4188f2',
+              color: '#4188f2',
+              bgcolor: 'rgba(65,136,242,0.06)'
             }
           }}
+        >
+          Select Page
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<RefreshIcon />}
+          onClick={handleSyncDatabaseClick}
+          sx={{
+            fontWeight: 'bold',
+            borderColor: '#4188f2',
+            color: '#4188f2',
+            '&:hover': { bgcolor: 'rgba(65,136,242,0.06)' }
+          }}
+        >
+          Sync Database
+        </Button>
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Button
+          variant="contained"
+          startIcon={<LocalShippingIcon />}
           onClick={handleShipClick}
           disabled={disabled}
-        >
-          <LocalShippingIcon />
-        </Fab>
-      </Tooltip>
-      <Tooltip title="Cancel" placement="top">
-        <Fab
           sx={{
-            bgcolor: 'red',
             fontWeight: 'bold',
-            color: 'white',
-            '&:hover': {
-              bgcolor: 'black'
-            },
-            '&:disabled': {
-              bgcolor: '#db5858'
-            }
+            bgcolor: '#2e7d32',
+            '&:hover': { bgcolor: '#1b5e20' },
+            '&.Mui-disabled': { bgcolor: '#a5d6a7', color: 'white' }
           }}
+        >
+          {`Ship${orders.length > 0 ? ` (${orders.length})` : ''}`}
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<CancelScheduleSendIcon />}
           onClick={handleCancelClick}
           disabled={disabled}
-        >
-          <CancelScheduleSendIcon />
-        </Fab>
-      </Tooltip>
-      <Tooltip title="Sync Database" placement="top">
-        <Fab
           sx={{
-            bgcolor: 'black',
             fontWeight: 'bold',
-            color: 'white',
-            '&:hover': {
-              bgcolor: '#4188f2'
-            }
+            bgcolor: '#c62828',
+            '&:hover': { bgcolor: '#b71c1c' },
+            '&.Mui-disabled': { bgcolor: '#ef9a9a', color: 'white' }
           }}
-          onClick={handleSyncDatabaseClick}
         >
-          <RefreshIcon />
-        </Fab>
-      </Tooltip>
+          {`Cancel${orders.length > 0 ? ` (${orders.length})` : ''}`}
+        </Button>
+      </Box>
+
       <ShipOrdersModal
         open={shipOrderModalOpen}
         handleClick={handleShipOrders}

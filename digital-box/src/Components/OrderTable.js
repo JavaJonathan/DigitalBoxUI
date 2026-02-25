@@ -25,6 +25,10 @@ const theme = createTheme({
   }
 });
 
+const HEADER_BG = '#4188f2';
+const ROW_ALT_BG = '#f8f9fa';
+const GROUP_SEPARATOR_SX = { borderBottom: '2px solid rgba(65,136,242,0.35)' };
+
 const OrderTable = props => {
   const [pageCount, setPageCount] = useState(1);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
@@ -68,27 +72,22 @@ const OrderTable = props => {
           mr: '3%',
           mt: '.5%',
           boxShadow: 10,
-          borderRadius: '20px'
+          borderRadius: '12px'
         }}
       >
         <Table sx={{ whiteSpace: 'normal', borderColor: 'grey' }}>
-          <TableHead
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)'
-            }}
-          >
+          <TableHead style={{ background: HEADER_BG }}>
             <TableRow sx={{ border: 2, whiteSpace: 'normal' }}>
               <TableCell
                 sx={{ border: 2 }}
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
                 className="cell"
               >
                 Order Number
               </TableCell>
               <TableCell
                 sx={{ border: 2, cursor: 'pointer' }}
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
                 align="center"
                 onClick={() => props.handleSortClick(props.tabValue)}
               >
@@ -100,28 +99,28 @@ const OrderTable = props => {
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
               >
                 Quantity
               </TableCell>
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
               >
                 Ship Date
               </TableCell>
               <TableCell
                 sx={{ border: 2 }}
                 align="center"
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
               >
                 Priority
               </TableCell>
               <TableCell
                 sx={{ border: 2, cursor: 'pointer' }}
                 align="center"
-                style={{ color: 'white', fontFamily: 'Alfa Slab One' }}
+                style={{ color: 'white', fontWeight: 'bold' }}
                 onClick={() => props.handleNoteSortClick()}
               >
                 Notes
@@ -132,113 +131,136 @@ const OrderTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.pdfItems.map((row, index) =>
-              index > props.page * 25 - 1 || index < props.page * 25 - 25
-                ? null
-                : row.FileContents.map((item, index) => (
-                    <TableRow key={`${row.FileId}-${index}`}>
-                      {index === 0 ? (
-                        <TableCell
-                          align="center"
-                          rowSpan={row.FileContents.length}
-                          style={{
-                            padding: '15px',
-                            fontWeight: 'bold',
-                            borderColor: '#4588f2'
-                          }}
-                          sx={{
-                            bgcolor: row.Checked ? '#e8f4fd' : '',
-                            pl: '1vh',
-                            border: 1
-                          }}
-                        >
-                          <div
+            {props.pdfItems.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  align="center"
+                  sx={{ py: 5, color: 'text.secondary', fontStyle: 'italic', fontSize: '0.95rem' }}
+                >
+                  No orders found. Use the search above to find orders.
+                </TableCell>
+              </TableRow>
+            ) : (
+              props.pdfItems.map((row, index) =>
+                index > props.page * 25 - 1 || index < props.page * 25 - 25
+                  ? null
+                  : row.FileContents.map((item, index) => {
+                      const isLastInGroup = index === row.FileContents.length - 1;
+                      const groupSx = isLastInGroup ? GROUP_SEPARATOR_SX : {};
+
+                      return (
+                        <TableRow key={`${row.FileId}-${index}`}>
+                          {index === 0 ? (
+                            <TableCell
+                              align="center"
+                              rowSpan={row.FileContents.length}
+                              style={{
+                                padding: '15px',
+                                fontWeight: 'bold',
+                                borderColor: '#4588f2'
+                              }}
+                              sx={{
+                                bgcolor: row.Checked ? '#e8f4fd' : '',
+                                pl: '1vh',
+                                border: 1,
+                                ...GROUP_SEPARATOR_SX
+                              }}
+                            >
+                              <div
+                                style={{
+                                  paddingBottom: '8px',
+                                  fontSize: '15px'
+                                }}
+                              >
+                                {props.renderSwitch ? (
+                                  <Switch
+                                    value={row.FileId}
+                                    checked={row.Checked}
+                                    onClick={handleSelected}
+                                  ></Switch>
+                                ) : null}
+                              </div>
+                              {row.FileContents[0].OrderNumber}
+                            </TableCell>
+                          ) : null}
+                          <TableCell
                             style={{
-                              pb: '2vh',
-                              fontSize: '15px'
+                              wordBreak: 'break-word',
+                              borderColor: 'darkgray'
+                            }}
+                            sx={{
+                              p: '1vh',
+                              bgcolor: row.Checked ? '#e8f4fd' : ROW_ALT_BG,
+                              ...groupSx
                             }}
                           >
-                            {props.renderSwitch ? (
-                              <Switch
-                                value={row.FileId}
-                                checked={row.Checked}
-                                onClick={handleSelected}
-                              ></Switch>
-                            ) : null}
-                          </div>
-                          {row.FileContents[0].OrderNumber}
-                        </TableCell>
-                      ) : null}
-                      <TableCell
-                        style={{
-                          wordBreak: 'break-word',
-                          borderColor: 'darkgray'
-                        }}
-                        sx={{
-                          p: '1vh',
-                          bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1'
-                        }}
-                      >
-                        <span style={{ fontWeight: 'bold' }}>{`${index + 1}.`}&nbsp;</span>
-                        {`${item.Title}`}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          borderColor: 'darkgray',
-                          bgcolor: row.Checked ? '#e8f4fd' : ''
-                        }}
-                      >
-                        {item.Quantity}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          borderColor: 'darkgray',
-                          bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1'
-                        }}
-                      >
-                        {item.ShipDate}
-                      </TableCell>
-                      {index === 0 ? (
-                        <TableCell
-                          align="center"
-                          sx={{
-                            bgcolor: row.Checked ? '#e8f4fd' : '',
-                            border: '1px solid darkgray'
-                          }}
-                          rowSpan={row.FileContents.length}
-                        >
-                          <BoltIconButton
-                            priority={row.priority}
-                            handleTogglePriority={props.handleTogglePriority}
-                            fileId={row.FileId}
-                            isLoading={props.isLoading}
-                          />
-                        </TableCell>
-                      ) : null}
-                      {index === 0 ? (
-                        <TableCell
-                          align="center"
-                          sx={{
-                            borderColor: 'darkgray',
-                            bgcolor: row.Checked ? '#e8f4fd' : '#f5f1f1',
-                            borderLeft: 1
-                          }}
-                          rowSpan={row.FileContents.length}
-                          onClick={() => handleNoteClick(row.FileId, row.note || '')}
-                        >
-                          <IconButton>
-                            {row.note ? (
-                              <NoteIcon fontSize="large" sx={{ color: '#4188f2' }} />
-                            ) : (
-                              <NoteAddIcon fontSize="large" />
-                            )}
-                          </IconButton>
-                        </TableCell>
-                      ) : null}
-                    </TableRow>
-                  ))
+                            <span style={{ fontWeight: 'bold' }}>{`${index + 1}.`}&nbsp;</span>
+                            {`${item.Title}`}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              borderColor: 'darkgray',
+                              bgcolor: row.Checked ? '#e8f4fd' : '',
+                              ...groupSx
+                            }}
+                          >
+                            {item.Quantity}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              borderColor: 'darkgray',
+                              bgcolor: row.Checked ? '#e8f4fd' : ROW_ALT_BG,
+                              ...groupSx
+                            }}
+                          >
+                            {item.ShipDate}
+                          </TableCell>
+                          {index === 0 ? (
+                            <TableCell
+                              align="center"
+                              sx={{
+                                bgcolor: row.Checked ? '#e8f4fd' : '',
+                                border: '1px solid darkgray',
+                                ...GROUP_SEPARATOR_SX
+                              }}
+                              rowSpan={row.FileContents.length}
+                            >
+                              <BoltIconButton
+                                priority={row.priority}
+                                handleTogglePriority={props.handleTogglePriority}
+                                fileId={row.FileId}
+                                isLoading={props.isLoading}
+                              />
+                            </TableCell>
+                          ) : null}
+                          {index === 0 ? (
+                            <TableCell
+                              align="center"
+                              sx={{
+                                borderColor: 'darkgray',
+                                bgcolor: row.Checked ? '#e8f4fd' : ROW_ALT_BG,
+                                borderLeft: 1,
+                                ...GROUP_SEPARATOR_SX
+                              }}
+                              rowSpan={row.FileContents.length}
+                              onClick={() => handleNoteClick(row.FileId, row.note || '')}
+                            >
+                              <IconButton>
+                                {row.note ? (
+                                  <NoteIcon fontSize="large" sx={{ color: '#4188f2' }} />
+                                ) : (
+                                  <NoteAddIcon fontSize="large" />
+                                )}
+                              </IconButton>
+                            </TableCell>
+                          ) : null}
+                        </TableRow>
+                      );
+                    })
+              )
             )}
           </TableBody>
         </Table>

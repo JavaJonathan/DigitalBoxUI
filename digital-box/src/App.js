@@ -200,7 +200,14 @@ function App() {
 
   return (
     <div className="App">
-      <GlobalStyles styles={{ body: { fontFamily: 'Alfa Slab One' } }} />
+      <GlobalStyles
+        styles={{
+          body: {
+            fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+            backgroundColor: '#f0f2f5'
+          }
+        }}
+      />
       {!signedIn ? (
         <div
           style={{
@@ -212,7 +219,7 @@ function App() {
             fontFamily: 'Alfa Slab One',
             fontSize: '72px',
             flexDirection: 'column',
-            pb: '20px',
+            paddingBottom: '20px',
             background:
               'linear-gradient(90deg, rgba(69,136,242,1) 12%, rgba(7,140,252,1) 46%, rgba(6,0,96,1) 94%)'
           }}
