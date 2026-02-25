@@ -27,7 +27,7 @@ const UndoShippedOrderModal = ({ open, handleClose, handleClick, name, handleCha
         <Button variant="text" onClick={handleClose}>
           Cancel
         </Button>
-        <Button variant="text" onClick={handleClick}>
+        <Button variant="text" onClick={handleClick} disabled={!name}>
           Confirm
         </Button>
       </DialogActions>

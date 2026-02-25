@@ -26,6 +26,10 @@ function App() {
   const [sortedByTitle, setSortedByTitle] = useState(false);
   const [sortedByNote, setSortedByNote] = useState(false);
 
+  //hack to pull state from another component, need redux
+  const [searchValue, setSearchValue] = useState(false);
+  const [filters, setFilters] = useState(false);
+
   useEffect(() => {
     let token = localStorage.getItem('DigitalBoxRefreshToken');
     if (!token) setSignedIn(false)
@@ -82,12 +86,16 @@ function App() {
       setMessage,
       fileId,
       priority,
+      searchValue,
+      filters,
       setIsLoading,
       setAuthToken
     );
   };
 
   const handleSearch = (searchValue, filters) => {
+    setSearchValue(searchValue)
+    setFilters(filters)
     HttpHelper.searchOrders(
       setPdfItems,
       setMessage,

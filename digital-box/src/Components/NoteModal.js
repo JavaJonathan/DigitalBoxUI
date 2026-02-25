@@ -1,7 +1,6 @@
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
@@ -48,9 +47,13 @@ const NoteModal = ({ open, handleClose, note, handleAddNote, selectedFileId }) =
             variant="outlined"
             fullWidth
             inputProps={{ maxLength: 50 }}
+            helperText={'Maximum 50 characters'}
             value={localNoteState}
             onChange={handleNoteChange}
             style={{ marginTop: '5px' }}
+            sx={{ "& .MuiFormHelperText-root": {
+              marginLeft: 0
+            } }}
           />
         </DialogContent>
         <DialogActions>

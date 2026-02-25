@@ -69,7 +69,6 @@ const NavBar = props => {
             <Button
               variant="contained"
               size="small"
-              color="success"
               onClick={handleHomeClick}
               sx={{
                 position: 'absolute',
@@ -77,7 +76,7 @@ const NavBar = props => {
                 fontWeight: 'bold'
               }}
             >
-              Back Home
+              Home 🏠
             </Button>
           ) : (
             <Button
@@ -90,7 +89,7 @@ const NavBar = props => {
                 fontWeight: 'bold'
               }}
             >
-              Order History
+              Order History 📋
             </Button>
           )}
           <div style={{ position: 'absolute', right: '2vw' }}>
@@ -122,9 +121,8 @@ const NavBar = props => {
                 accept=".csv,text/csv"
                 style={{ display: 'none' }}
                 onChange={handleReportUpload}
-              />
-              Shippable Items
-              <UploadFileIcon sx={{ ml: 0.5 }} fontSize="small" />
+              />              
+              Shippable Items 📝
             </Button>
           </div>
         </Toolbar>
